@@ -31,9 +31,10 @@ INPUTS = {
 
 # ---- Outputs ----
 OUTPUTS = {
-    "grid": PROCESSED / "grid.gpkg",
-    "fire": PROCESSED / "fire_month.parquet",
-    "figures": OUTPUT / "figures",
+    "grid":      PROCESSED / "grid.gpkg",
+    "fire":      PROCESSED / "fire_month.parquet",
+    "climate":   PROCESSED / "climate_month.parquet",
+    "figures":   OUTPUT / "figures",
 }
 
 # ---- Model settings ----

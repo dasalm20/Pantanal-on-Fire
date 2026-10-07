@@ -138,11 +138,18 @@ print(chk.groupby("area_bin", observed=True)["fire_binary"].mean())
 print(chk.groupby("area_bin", observed=True)["rate_per_km2"].mean())
 
 #---Plot to have a visual reference--
-chk["bin_mid"] = pd.cut(chk["area_km2"], bins=25).apply(lambda b: b.mid)
-by_size = chk.groupby("bin_mid", observed=True)[["fire_binary", "rate_per_km2"]].mean()
+#this is a sanity check to see if the pattern is as expected. 
+# The plot shows that small cells record fewer fires, mostly because 
+# they cover less ground. The candidate cut-off of 12.5 km² is marked with a vertical line.
+chk["bin_mid"] = pd.cut(chk["area_km2"], 
+bins=25).apply(lambda b: b.mid)
+by_size = chk.groupby("bin_mid", 
+                     observed=True)[["fire_binary", 
+                                    "rate_per_km2"]].mean()
 
-fig, ax = plt.subplots(figsize=(7, 4))
+fig, ax = plt.subplots(figsize=(7, 4)) #Set figure size to 7 inches wide and 4 inches tall.
 
+#add the two lines to the plot, one for the share of months with a fire and one for detections per km².
 ax.plot(by_size.index, by_size["fire_binary"], color="#15594d",
         marker="o", markersize=3, label="Share of months with a fire")
 ax.plot(by_size.index, by_size["rate_per_km2"], color="#9c4326",
@@ -153,6 +160,7 @@ ax.axvline(12.5, color="#555", linewidth=1, linestyle=":")
 ax.text(12.5, ax.get_ylim()[1], " candidate cut-off\n 12.5 km²",
         ha="left", va="top", fontsize=8, color="#555")
 
+#Set the x and y labels, title, legend, and remove the top and right spines for a cleaner look.
 ax.set_xlabel("Cell area (km²)")
 ax.set_ylabel("Mean per cell-month")
 ax.set_title("Small cells record fewer fires, mostly because they cover less ground",
@@ -160,7 +168,7 @@ ax.set_title("Small cells record fewer fires, mostly because they cover less gro
 ax.legend(fontsize=8, frameon=False)
 ax.spines[["top", "right"]].set_visible(False)
 fig.tight_layout()
-
+#save the figure to the outputs folder with a resolution of 300 dpi.
 fig.savefig(cfg.OUTPUTS["figures"] / "fire_rate_by_cell_area.png", dpi=300)
 plt.show()
 

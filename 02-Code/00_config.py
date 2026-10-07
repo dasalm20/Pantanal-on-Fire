@@ -32,6 +32,7 @@ INPUTS = {
 # ---- Outputs ----
 OUTPUTS = {
     "grid": PROCESSED / "grid.gpkg",
+    "fire": PROCESSED / "fire_month.parquet",
     "figures": OUTPUT / "figures",
 }
 

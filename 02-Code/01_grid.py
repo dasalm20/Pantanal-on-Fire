@@ -136,7 +136,6 @@ path = cfg.OUTPUTS["grid"]
 grid.to_file(path, layer="grid", driver="GPKG")
 
 
-
 #---Study area map---
 
 # Pantanal is taller than it is wide.
@@ -200,14 +199,25 @@ fig.text(0.01, 0.01,
 #---Locator inset---
 # A small second map showing where the Pantanal sits among Brazil's biomes.
 # The four numbers are [left, bottom, width, height] as fractions of the figure.
-axin = fig.add_axes([0.63, 0.14, 0.24, 0.24])
+#---Locator inset---
+axin = ax.inset_axes([0.62, 0.06, 0.30, 0.24])
+axin.set_facecolor("white")
 biome.to_crs(cfg.CRS).plot(ax=axin, facecolor="#e8ece9", edgecolor="white", linewidth=0.4)
 pantanal.plot(ax=axin, facecolor="#9c4326", edgecolor="none")
-axin.set_axis_off()
-axin.set_title("Location in Brazil", fontsize=7)
+axin.set_aspect("equal")
+axin.set_xticks([]); axin.set_yticks([])
+for s in axin.spines.values():
+    s.set_linewidth(0.5)
+    s.set_edgecolor("#9aa5a0")
+
+# Label inside the box, bottom left, over empty ocean space.
+axin.text(0.04, 0.04, "Location in Brazil", transform=axin.transAxes,
+          ha="left", va="bottom", fontsize=6.5, color="#555")
+#show plot
+plt.show()
 
 #---Save---
-# 300 dpi because this goes on a printed poster.
+# Save before show: plt.show() closes the figure.
 plt.savefig(cfg.OUTPUTS["figures"] / "study_area.png", dpi=300, bbox_inches="tight")
-#clean all plots
-plt.close('all')
+
+plt.show()

@@ -1,0 +1,32 @@
+# Conda environment for the Pantanal on Fire project.
+# Create it with:  conda env create -f environment.yml
+# Then activate:   conda activate pantanal
+
+name: pantanal
+
+channels:
+  # conda-forge has the geospatial stack built against matching GDAL/PROJ.
+  # Mixing it with defaults is the usual cause of broken rasterio installs.
+  - conda-forge
+
+dependencies:
+  - python=3.11
+
+  # Spatial
+  - geopandas        # vector data: the grid, biome boundary, OSM lines
+  - rasterio         # read the CHIRPS, Tmax and MapBiomas rasters
+  - rioxarray        # raster sampling and clipping on top of rasterio
+
+  # Tabular
+  - pandas           # the cell-month panel
+  - numpy
+  - pyarrow          # required to write .parquet in scripts 02 to 08
+
+  # Modelling
+  - scikit-learn     # Random Forest, metrics, calibration
+
+  # Output
+  - matplotlib       # maps and figures
+  - jupyterlab       # runs the project notebook in 01-Doc
+
+  - pip

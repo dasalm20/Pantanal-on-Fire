@@ -1,0 +1,12 @@
+# Data
+03-Data/
+04-Processed/
+
+# Python
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+
+# OS
+.DS_Store
+.DS_Store

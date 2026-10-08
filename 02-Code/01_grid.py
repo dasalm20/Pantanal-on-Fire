@@ -138,18 +138,19 @@ grid.to_file(path, layer="grid", driver="GPKG")
 
 #---Study area map---
 
-# Pantanal is taller than it is wide.
+# Start with a tall figure. The exact shape is set below, once the map's
+# own width and height are known.
 fig, ax = plt.subplots(figsize=(8.5, 10))
 
-# Draw the grid first, then the boundary on top .
-grid.boundary.plot(ax=ax, linewidth=0.15, color="#9aa5a0", zorder=2) # zorder controls what sits above what.
+# Draw the grid first, then the boundary on top.
+grid.boundary.plot(ax=ax, linewidth=0.08, color="#9aa5a0", zorder=2) # zorder controls what sits above what.
 pantanal.plot(ax=ax, facecolor="none", edgecolor="black", linewidth=1.4, zorder=3)
 
 # Equal aspect so the map is not stretched.
 ax.set_aspect("equal")
 
 #---Coordinates---
-# Our CRS is in metres, which gives huge tick numbers. 
+# Our CRS is in metres, which gives huge tick numbers.
 km = FuncFormatter(lambda v, p: f"{v/1000:,.0f}") #Divide by 1000 to show km.
 ax.xaxis.set_major_formatter(km)
 ax.yaxis.set_major_formatter(km)
@@ -164,6 +165,14 @@ x0, x1 = ax.get_xlim()
 y0, y1 = ax.get_ylim()
 w = x1 - x0
 h = y1 - y0
+
+#---Match the figure shape to the map shape---
+# With equal aspect the map keeps its true proportions, but the frame keeps
+# the figure's proportions. If they differ, the leftover width shows up as
+# blank space inside the frame. Setting the figure width from the map's own
+# width-to-height ratio removes it. The extra inches are for the axis labels.
+h_in = 10
+fig.set_size_inches(h_in * (w / h) + 1.4, h_in)
 
 #---Scale bar---
 # A black bar exactly 100 km long, placed near the bottom left.
@@ -181,7 +190,7 @@ ax.annotate("N", xy=(nx, ny), xytext=(nx, ny - h * 0.055),
             ha="center", fontsize=11, fontweight="bold")
 
 #---Legend---
-# Line2D makes a fake line just for the legend key. 
+# Line2D makes a fake line just for the legend key.
 ax.legend(handles=[
     Line2D([], [], color="black", lw=1.4, label="Pantanal boundary"),
     Line2D([], [], color="#9aa5a0", lw=0.6, label=f"{cfg.GRID_M // 1000} km analysis grid"),
@@ -190,22 +199,26 @@ ax.legend(handles=[
 #---Title and caption---
 ax.set_title("Study area: the Brazilian Pantanal", fontsize=14, fontweight="bold", loc="left")
 
-# The caption reads the real numbers from the grid. 
-fig.text(0.01, 0.01,
-         f"{len(grid):,} grid cells · {grid['area_km2'].sum():,.0f} km² · {grid.crs.to_string()}\n"
-         "Boundary: IBGE Biomas do Brasil, 1:250,000",
-         fontsize=7, color="#555")
+# The caption reads the real numbers from the grid.
+# transform=ax.transAxes places it relative to the map frame, so it lines up
+# with the left edge of the map rather than the edge of the figure.
+ax.text(0, -0.085,
+        f"{len(grid):,} grid cells · {grid['area_km2'].sum():,.0f} km² · {grid.crs.to_string()}\n"
+        "Boundary: IBGE Biomas do Brasil, 1:250,000",
+        transform=ax.transAxes, ha="left", va="top",
+        fontsize=7, color="#555")
 
 #---Locator inset---
 # A small second map showing where the Pantanal sits among Brazil's biomes.
-# The four numbers are [left, bottom, width, height] as fractions of the figure.
-#---Locator inset---
+# The four numbers are [left, bottom, width, height] as fractions of the map.
 axin = ax.inset_axes([0.62, 0.06, 0.30, 0.24])
 axin.set_facecolor("white")
 biome.to_crs(cfg.CRS).plot(ax=axin, facecolor="#e8ece9", edgecolor="white", linewidth=0.4)
 pantanal.plot(ax=axin, facecolor="#9c4326", edgecolor="none")
 axin.set_aspect("equal")
 axin.set_xticks([]); axin.set_yticks([])
+axin.set_xlabel("")   # set_xticks removes the ticks but not the label
+axin.set_ylabel("")
 for s in axin.spines.values():
     s.set_linewidth(0.5)
     s.set_edgecolor("#9aa5a0")
@@ -213,8 +226,6 @@ for s in axin.spines.values():
 # Label inside the box, bottom left, over empty ocean space.
 axin.text(0.04, 0.04, "Location in Brazil", transform=axin.transAxes,
           ha="left", va="bottom", fontsize=6.5, color="#555")
-#show plot
-plt.show()
 
 #---Save---
 # Save before show: plt.show() closes the figure.

@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>GEOG 654 Final Project</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="GEOG654_project_notebook_files/libs/clipboard/clipboard.min.js"></script>
+<script src="GEOG654_project_notebook_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="GEOG654_project_notebook_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="GEOG654_project_notebook_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="GEOG654_project_notebook_files/libs/quarto-html/popper.min.js"></script>
+<script src="GEOG654_project_notebook_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="GEOG654_project_notebook_files/libs/quarto-html/anchor.min.js"></script>
+<link href="GEOG654_project_notebook_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="GEOG654_project_notebook_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="GEOG654_project_notebook_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="GEOG654_project_notebook_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="GEOG654_project_notebook_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">GEOG 654 Final Project</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="pantanal-on-fire" class="level2">
+<h2 class="anchored" data-anchor-id="pantanal-on-fire">Pantanal on Fire</h2>
+<p><strong>Daylan Salmeron</strong></p>
+<p>This notebook documents the project workflow by section, as well as the decisions made during the analysis process.</p>
+<p>One section per script. A new section is added with each commit, recording what the script does, what it produced, and any decision that could have gone another way.</p>
+<p>The code cells read the outputs each script wrote. They do not rerun the pipeline.</p>
+<div id="45a22441" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Set up libraries and paths</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> importlib.util</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The notebook lives in 01-Doc, so the repo root is one level up.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ROOT <span class="op">=</span> Path.cwd().parent <span class="cf">if</span> Path.cwd().name <span class="op">==</span> <span class="st">"01-Doc"</span> <span class="cf">else</span> Path.cwd()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#this is a hack to import the config file from 02-Code without adding it to the path</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>spec <span class="op">=</span> importlib.util.spec_from_file_location(<span class="st">"config"</span>, ROOT <span class="op">/</span> <span class="st">"02-Code"</span> <span class="op">/</span> <span class="st">"00_config.py"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cfg <span class="op">=</span> importlib.util.module_from_spec(spec)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>spec.loader.exec_module(cfg)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Repo root:"</span>, ROOT)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"CRS:"</span>, cfg.CRS)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Grid size:"</span>, cfg.GRID_M, <span class="st">"m"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Repo root: /Users/nikos/Documents/Projects/Pantanal-on-Fire
+CRS: EPSG:31981
+Grid size: 5000 m</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="config.py" class="level2">
+<h2 class="anchored" data-anchor-id="config.py">00_config.py</h2>
+<p>Holds every path, CRS and constant in one place so the other scripts never hardcode anything.</p>
+<p><strong>Does:</strong> points at the eight raw inputs (IBGE biomes, FIRMS VIIRS, CHIRPS, CHIRTS Tmax, MapBiomas land cover, MapBiomas water, OSM roads, OSM waterways) and sets the project CRS to EPSG:31981, grid size to 5 km, training years 2019-2024, validation year 2025. Running it checks every input exists and counts the monthly rasters.</p>
+<p><strong>Output:</strong> all inputs present, 96 CHIRPS and 96 Tmax files covering 2018-2025.</p>
+<section id="input-inventory" class="level3">
+<h3 class="anchored" data-anchor-id="input-inventory">Input inventory</h3>
+<p>All raw data lives in <code>03-Data/</code> and is excluded from version control.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>Input</th>
+<th>Source</th>
+<th>Coverage / resolution</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>IBGE Biomes/</code></td>
+<td>Brazilian biome boundaries</td>
+<td>IBGE</td>
+<td>Vector, 1:250,000</td>
+<td>Pantanal study boundary</td>
+</tr>
+<tr class="even">
+<td><code>DL_FIRE_J1V-C2_818288/</code></td>
+<td>NOAA-20 VIIRS active-fire detections</td>
+<td>NASA FIRMS</td>
+<td>Points, ~375 m, 2019-2025</td>
+<td>Fire response, fire counts, previous-month fire</td>
+</tr>
+<tr class="odd">
+<td><code>CHIRPS_monthly_2018_2025/</code></td>
+<td>Monthly precipitation</td>
+<td>CHIRPS v3, Climate Hazards Center, UCSB</td>
+<td>Raster, ~0.05°, monthly 2018-2025</td>
+<td>Previous-month, previous-3-month and wet-season rainfall</td>
+</tr>
+<tr class="even">
+<td><code>CHIRTS-ERA5_Tmax_monthly_2018_2025/</code></td>
+<td>Monthly maximum temperature</td>
+<td>CHIRTS-ERA5, Climate Hazards Center, UCSB</td>
+<td>Raster, ~0.05°, monthly 2018-2025</td>
+<td>Previous-month and previous-3-month Tmax</td>
+</tr>
+<tr class="odd">
+<td><code>MapBiomas Collection 11/</code></td>
+<td>Annual land cover</td>
+<td>MapBiomas Brazil Collection 11</td>
+<td>Raster, 30 m, 2018-2025</td>
+<td>Forest, savanna, pasture, wetland and other class shares</td>
+</tr>
+<tr class="even">
+<td><code>Pantanal_MapBiomas_Water/</code></td>
+<td>Monthly surface water</td>
+<td>MapBiomas Water Collection 5</td>
+<td>Raster, 30 m, monthly 2018-2025</td>
+<td>Inundation extent and change</td>
+</tr>
+<tr class="odd">
+<td><code>OpenStreetMap_Geofabrik/</code></td>
+<td>Roads and waterways</td>
+<td>OpenStreetMap via Geofabrik</td>
+<td>Vector lines, 2020-01-01 snapshot</td>
+<td>Distance to roads and waterways</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="source-locations" class="level3">
+<h3 class="anchored" data-anchor-id="source-locations">Source locations</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>Where it came from</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>IBGE Biomes</td>
+<td><code>ibge.gov.br/geociencias/informacoes-ambientais/estudos-ambientais/15842-biomas.html</code>, file <code>lml_bioma_e250k_v20250911_A.shp</code></td>
+</tr>
+<tr class="even">
+<td>NASA FIRMS</td>
+<td><code>firms.modaps.eosdis.nasa.gov/download/</code>, J1 VIIRS Collection 2, Brazil, 2019-2025</td>
+</tr>
+<tr class="odd">
+<td>CHIRPS v3</td>
+<td><code>data.chc.ucsb.edu/products/CHIRPS/v3.0/monthly/latam/tifs/chirps-v3.0.YYYY.MM.tif</code></td>
+</tr>
+<tr class="even">
+<td>CHIRTS-ERA5 Tmax</td>
+<td><code>data.chc.ucsb.edu/experimental/CHIRTS-ERA5/tmax/tifs/monthly/CHIRTS-ERA5.monthly_Tmax.YYYY.MM.tif</code></td>
+</tr>
+<tr class="odd">
+<td>MapBiomas land cover</td>
+<td><code>brasil.mapbiomas.org</code>, collection 11 annual coverage rasters</td>
+</tr>
+<tr class="even">
+<td>MapBiomas Water</td>
+<td>Earth Engine asset <code>projects/mapbiomas-public/assets/brazil/water/collection5/mapbiomas_brazil_collection5_water_monthly_v4</code></td>
+</tr>
+<tr class="odd">
+<td>OSM</td>
+<td><code>download.geofabrik.de/south-america/brazil/centro-oeste.html</code>, archive <code>centro-oeste-200101-free.shp.zip</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisions</strong></p>
+<ul>
+<li>Paths are derived from the repo root rather than an absolute path, so the project runs on any machine.</li>
+<li>EPSG:31981 (SIRGAS 2000 / UTM 21S) used throughout. A projected CRS in metres is required for any area or distance calculation.</li>
+<li>Two CHIRPS folders and two Tmax folders exist on disk. The config points only at <code>CHIRPS_monthly_2018_2025</code> and <code>CHIRTS-ERA5_Tmax_monthly_2018_2025</code>. All results come from those.</li>
+<li>Climate data starts in 2018 so that lagged predictors are available for the first target year, 2019.</li>
+<li>Land cover is taken from the previous year (2018 for the 2019 target, and so on), so no information from the target year enters the predictors.</li>
+<li>The MapBiomas Water files hold one year each, with twelve bands named <code>water_YYYY_MM</code>. The pixel values are 0 or 1, so the month is carried in the band name rather than in the value.</li>
+<li>Roads and waterways come from a single 2020 snapshot applied across 2019-2025. Road networks change over that period, so distance to roads is treated as a static predictor. Recorded as a limitation.</li>
+</ul>
+</section>
+<section id="how-the-data-was-collected" class="level3">
+<h3 class="anchored" data-anchor-id="how-the-data-was-collected">How the data was collected</h3>
+<p><strong>IBGE Biomes</strong> - Downloaded the national biome boundary shapefile from the IBGE Biomes page. - Used the file carrying the <code>NM_BIOMA</code> field, then filtered to Pantanal only.</p>
+<p><strong>NASA FIRMS, NOAA-20 VIIRS fire detections</strong> - Downloaded from the NASA FIRMS portal: country Brazil, product NOAA-20 VIIRS / J1 VIIRS Collection 2, 2019-01-01 to 2025-12-31, CSV, no spatial buffer. - File: <code>fire_archive_J1V-C2_818288.csv</code>. - All confidence categories kept. Detections are filtered spatially to the Pantanal and temporally to the modelled months later in the pipeline.</p>
+<p><strong>CHIRPS v3 monthly rainfall</strong> - Downloaded monthly TIFFs from the Climate Hazards Center archive using a scripted URL pattern. - January 2018 through December 2025, 96 files. - Feeds previous-month, previous-3-month and previous wet-season rainfall.</p>
+<p><strong>CHIRTS-ERA5 monthly Tmax</strong> - Same approach and date range as CHIRPS, 96 files. - Feeds previous-month and previous-3-month maximum temperature.</p>
+<p><strong>MapBiomas Collection 11 annual land cover</strong> - Downloaded annual Brazil land-cover TIFFs from the MapBiomas public Google Cloud Storage files. - Initially 2019-2025. 2018 was added afterwards so that the 2019 target year could use previous-year land cover. - Final coverage 2018-2025, used one year lagged throughout to avoid same-year leakage.</p>
+<p><strong>MapBiomas Water Collection 5</strong> - Exported from the Google Earth Engine asset <code>projects/mapbiomas-public/assets/brazil/water/collection5/mapbiomas_brazil_collection5_water_monthly_v4</code>, clipped to the Pantanal. - One 12-band stack per year, 2018-2025. Earth Engine split each annual export into two tiles because of raster size, giving 16 TIFFs. - Yearly tile pairs are combined with VRT mosaics rather than duplicating the rasters. - Each yearly file holds twelve bands named <code>water_YYYY_MM</code>, with pixel values of 0 or 1. The month is in the band name, not the pixel value.</p>
+<p><strong>OpenStreetMap roads and waterways</strong> - Downloaded the historical Geofabrik Centro-Oeste archive <code>centro-oeste-200101-free.shp.zip</code>, a 2020-01-01 snapshot. - Extracted <code>gis_osm_roads_free_1.shp</code> and <code>gis_osm_waterways_free_1.shp</code>. - Used to compute distance from each cell to the nearest road and nearest mapped waterway.</p>
+<div id="c99a97a2" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Confirm every raw input is still where the config expects it.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, path <span class="kw">in</span> cfg.INPUTS.items():</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'OK'</span> <span class="cf">if</span> path<span class="sc">.</span>exists() <span class="cf">else</span> <span class="st">'MISSING'</span><span class="sc">:8}</span><span class="ss"> | </span><span class="sc">{</span>name<span class="sc">:10}</span><span class="ss"> | </span><span class="sc">{</span>path<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>OK       | ibge       | lml_bioma_e250k_v20250911_A.shp
+OK       | firms      | fire_archive_J1V-C2_818288.csv
+OK       | chirps     | CHIRPS_monthly_2018_2025
+OK       | tmax       | CHIRTS-ERA5_Tmax_monthly_2018_2025
+OK       | landcover  | MapBiomas Collection 11
+OK       | water      | Pantanal_MapBiomas_Water
+OK       | roads      | gis_osm_roads_free_1.shp
+OK       | waterways  | gis_osm_waterways_free_1.shp</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="grid.py" class="level2">
+<h2 class="anchored" data-anchor-id="grid.py">01_grid.py</h2>
+<p>Builds the spatial skeleton every later script attaches columns to.</p>
+<p><strong>Does:</strong> reads the IBGE biome layer, keeps the Pantanal, reprojects from degrees to metres, then lays a 5 km fishnet over its bounding box with the origin snapped to a 5 km multiple so the grid is reproducible. Cells touching the biome are kept and clipped to the boundary, which leaves edge cells smaller than a full 25 km². Each cell gets its area in km², a representative point for sampling rasters later, and a stable ID for joining.</p>
+<p><strong>Output:</strong> <code>grid.gpkg</code> with 6,584 cells totalling 150,880 km², close to the published Pantanal extent of about 150,400 km². The small difference is likely the vintage of the IBGE polygon. Also <code>study_area.png</code> for the study area figure.</p>
+<p><strong>Decisions</strong></p>
+<ul>
+<li>Grid origin snapped to a multiple of the cell size, so the grid does not shift if the boundary file is updated.</li>
+<li><code>representative_point()</code> used rather than <code>centroid</code>. A clipped cell can be L-shaped, and its centroid can fall outside the polygon, which would sample the wrong raster pixel.</li>
+<li><code>union_all()</code> used instead of <code>.dissolve()</code> to merge the Pantanal polygons. Same effect for this purpose. Geometry was already valid, so no <code>buffer(0)</code> repair was needed.</li>
+<li>Saved as GeoPackage rather than shapefile: no 10-character column limit, one file instead of five, and proper CRS storage.</li>
+</ul>
+<p><strong>AI-assisted decisions</strong></p>
+<p>I measured the area distribution and saw that clipping leaves cells of very different sizes. I have seen this problem before while working on poverty maps for Burundi and São Tomé and Príncipe. I checked with an AI model, which suggested varying the threshold from 0 to 100% of a cell rather than defending a single value, and framing it as a zoning decision under the modifiable areal unit problem.</p>
+<div id="77e5b06b" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>grid <span class="op">=</span> gpd.read_file(cfg.OUTPUTS[<span class="st">"grid"</span>], layer<span class="op">=</span><span class="st">"grid"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cells:"</span>, <span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(grid)<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Total area (km2):"</span>, <span class="ss">f"</span><span class="sc">{</span>grid[<span class="st">'area_km2'</span>]<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"CRS:"</span>, grid.crs)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>grid.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cells: 6,584
+Total area (km2): 150,880
+CRS: EPSG:31981</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">area_km2</th>
+<th data-quarto-table-cell-role="th">rep_x</th>
+<th data-quarto-table-cell-role="th">rep_y</th>
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>9.818856</td>
+<td>411665.338150</td>
+<td>7.553475e+06</td>
+<td>1</td>
+<td>MULTIPOLYGON (((415000 7552850.906, 414980.2 7...</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>16.088914</td>
+<td>416900.864536</td>
+<td>7.552670e+06</td>
+<td>2</td>
+<td>MULTIPOLYGON (((415000 7555000, 420000 7555000...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>10.540619</td>
+<td>422026.671086</td>
+<td>7.553328e+06</td>
+<td>3</td>
+<td>MULTIPOLYGON (((420000 7555000, 423530.472 755...</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>25.000000</td>
+<td>412500.000000</td>
+<td>7.557500e+06</td>
+<td>4</td>
+<td>MULTIPOLYGON (((410000 7555000, 410000 7560000...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>25.000000</td>
+<td>417500.000000</td>
+<td>7.557500e+06</td>
+<td>5</td>
+<td>MULTIPOLYGON (((415000 7555000, 415000 7560000...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="minimum-cell-area-measured-here-decided-later" class="level3">
+<h3 class="anchored" data-anchor-id="minimum-cell-area-measured-here-decided-later">Minimum cell area: measured here, decided later</h3>
+<p>Clipping the grid to the biome leaves 1,100 partial cells, from 0.002 to 25 km². The largest cell covers 12,700 times the ground of the smallest.</p>
+<p>This matters because the response is a binary fire-detection indicator over the cell footprint. A small cell records fewer detections simply because it covers less ground, which the model would read as lower fire risk. Unequal exposure area confounds detection probability with fire susceptibility.</p>
+<p>No cells are dropped in this script. The cut-off is applied later because the exact value is a choice rather than a measurement, and choices like this are known to change results (Openshaw, 1984; Fotheringham and Wong, 1991).</p>
+<div id="354d2135" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>FULL_KM2 <span class="op">=</span> (cfg.GRID_M <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> <span class="fl">1e6</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> frac <span class="kw">in</span> (<span class="fl">0.04</span>, <span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.75</span>):</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> frac <span class="op">*</span> FULL_KM2</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    below <span class="op">=</span> grid[<span class="st">"area_km2"</span>] <span class="op">&lt;</span> t</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"cut-off"</span>: <span class="ss">f"</span><span class="sc">{</span>frac<span class="sc">:.0%}</span><span class="ss"> of a cell"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"km2"</span>: <span class="bu">round</span>(t, <span class="dv">2</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"cells below"</span>: <span class="bu">int</span>(below.<span class="bu">sum</span>()),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"share of cells"</span>: <span class="ss">f"</span><span class="sc">{</span>below<span class="sc">.</span>mean()<span class="sc">:.1%}</span><span class="ss">"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"area below (km2)"</span>: <span class="bu">round</span>(grid.loc[below, <span class="st">"area_km2"</span>].<span class="bu">sum</span>(), <span class="dv">1</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">cut-off</th>
+<th data-quarto-table-cell-role="th">km2</th>
+<th data-quarto-table-cell-role="th">cells below</th>
+<th data-quarto-table-cell-role="th">share of cells</th>
+<th data-quarto-table-cell-role="th">area below (km2)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>4% of a cell</td>
+<td>1.00</td>
+<td>125</td>
+<td>1.9%</td>
+<td>48.9</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>25% of a cell</td>
+<td>6.25</td>
+<td>367</td>
+<td>5.6%</td>
+<td>842.4</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>50% of a cell</td>
+<td>12.50</td>
+<td>542</td>
+<td>8.2%</td>
+<td>2484.3</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>75% of a cell</td>
+<td>18.75</td>
+<td>739</td>
+<td>11.2%</td>
+<td>5582.2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cfea7e9e" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> grid[<span class="st">"area_km2"</span>].plot.hist(bins<span class="op">=</span><span class="dv">50</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">3.5</span>), color<span class="op">=</span><span class="st">"#15594d"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Cell area (km2)"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Number of cells"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Clipped cell areas: a spike at 25 km2 and a long tail of slivers"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>ax.figure.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GEOG654_project_notebook_files/figure-html/cell-6-output-1.png" width="690" height="340" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="fire.py" class="level2">
+<h2 class="anchored" data-anchor-id="fire.py">02_fire.py</h2>
+<p>Builds the thing we are trying to predict: one row per cell per month, with a fire count and a yes/no flag.</p>
+<p><strong>In this file:</strong> read the fire detections for Brazil, drop the hot spots that are not vegetation fires, match each one to the grid cell it falls in, and count them by cell and month.</p>
+<p><strong>Output:</strong> <code>fire_month.parquet</code>, 553,056 rows. 548,871 detections land inside the Pantanal. 4.76% of cell-months had a fire.</p>
+<p><strong>Decisions made</strong></p>
+<ul>
+<li>Kept only <code>type = 0</code>, a vegetation fire. Type 2 is something always hot, like a gas flare, which would show up every month in the same cell. Type 3 is over water. Together 1.2% of the file.</li>
+<li>Kept all confidence levels. Dropping the low ones would remove 8.4% of detections, so it is tested in the sensitivity analysis instead.</li>
+<li>Filled every missing cell and month with a zero. Counting only shows where fires happened, so without this every row would be a fire.</li>
+</ul>
+<p><strong>AI-assisted decisions</strong></p>
+<p>I ran the counts and saw 105,937 type 2 and 17,358 type 3 detections. I checked with an AI model, which suggested dropping both, since type 2 is a permanent heat source like a gas flare that would appear in the same cell every month.</p>
+<p><strong>Does cell size distort the answer?</strong></p>
+<p>A small cell covers less ground, so it can look safe just because there was less of it to see.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Cell area</th>
+<th style="text-align: right;">Months with a fire</th>
+<th style="text-align: right;">Detections per km²</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0 to 1 km²</td>
+<td style="text-align: right;">0.42%</td>
+<td style="text-align: right;">0.018</td>
+</tr>
+<tr class="even">
+<td>1 to 5 km²</td>
+<td style="text-align: right;">1.73%</td>
+<td style="text-align: right;">0.027</td>
+</tr>
+<tr class="odd">
+<td>5 to 12.5 km²</td>
+<td style="text-align: right;">3.35%</td>
+<td style="text-align: right;">0.036</td>
+</tr>
+<tr class="even">
+<td>12.5 to 20 km²</td>
+<td style="text-align: right;">4.17%</td>
+<td style="text-align: right;">0.034</td>
+</tr>
+<tr class="odd">
+<td>20 to 25 km²</td>
+<td style="text-align: right;">5.03%</td>
+<td style="text-align: right;">0.044</td>
+</tr>
+</tbody>
+</table>
+<p>Big cells catch fire twelve times more often than the smallest. Divided by area, the gap drops to 2.4 times. So most of it is the amount of ground, not the risk.</p>
+<p>The remaining gap may reflect something real about the biome edge, where all the small cells sit, but that has not been tested here. Either way, edge cells are not fair to compare against full cells. The cut-off is applied later, in <code>07_panel.py</code>.</p>
+<p><strong>When fires happen</strong></p>
+<p>September is the worst month at 10.4%, with August and October close behind. Below 2% in the wet season. 2020 was the worst year at 9.85%, 2025 the quietest at 0.94%.</p>
+<p>The model learns from busy fire years and is then asked to predict a very quiet one.</p>
+<div id="36e17cff" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read back what 02_fire.py wrote, so the numbers above cannot go stale.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fire <span class="op">=</span> pd.read_parquet(cfg.OUTPUTS[<span class="st">"fire"</span>])</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"rows:"</span>, <span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(fire)<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"cell-months with fire:"</span>, <span class="ss">f"</span><span class="sc">{</span>fire[<span class="st">'fire_binary'</span>]<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"prevalence:"</span>, <span class="ss">f"</span><span class="sc">{</span>fire[<span class="st">'fire_binary'</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">by month"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fire.groupby(<span class="st">"month"</span>)[<span class="st">"fire_binary"</span>].mean().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">by year"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fire.groupby(<span class="st">"year"</span>)[<span class="st">"fire_binary"</span>].mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>rows: 553,056
+cell-months with fire: 26,310
+prevalence: 0.0476
+
+by month
+month
+1     0.0280
+2     0.0180
+3     0.0197
+4     0.0175
+5     0.0197
+6     0.0303
+7     0.0476
+8     0.0863
+9     0.1044
+10    0.0988
+11    0.0703
+12    0.0304
+Name: fire_binary, dtype: float64
+
+by year
+year
+2019    0.0782
+2020    0.0985
+2021    0.0467
+2022    0.0207
+2023    0.0291
+2024    0.0504
+2025    0.0094
+Name: fire_binary, dtype: float64</code></pre>
+</div>
+</div>
+</section>
+<section id="climate.py" class="level2">
+<h2 class="anchored" data-anchor-id="climate.py">03_climate.py</h2>
+<p>Gets the rainfall and the highest temperature for every cell, for every month from 2018 to 2025.</p>
+<p><strong>In this file:</strong> we load the grid, move its sampling points into the same projection as the climate rasters, then read the value sitting under each point in every monthly file. One file is one month, so the year and month are taken from the file name. The 96 rainfall files and the 96 temperature files are read the same way and joined together.</p>
+<p><strong>Output:</strong> <code>climate_month.parquet</code>, 632,064 rows (6,584 cells x 8 years x 12 months). No values are missing.</p>
+<p><strong>Decisions made</strong></p>
+<ul>
+<li>The points were moved to match the rasters, not the other way round. Reprojecting 192 rasters would be slow and would change the pixel values.</li>
+<li>Neither file carries a nodata tag, so the fill value had to come from the documentation. CHIRPS records -9999 as its missing value. CHIRTS-ERA5 does not document one. Rather than assume a cut-off, the lowest values found were checked: rainfall bottoms at 0 mm and temperature at 22.8 °C, so no fill values are present over the Pantanal and nothing was masked.</li>
+<li>Units are millimetres per month and degrees Celsius, both confirmed in the documentation, so no conversion was needed.</li>
+<li>A 5 km cell is slightly smaller than a 0.05 degree pixel, which is about 5.5 km, so some neighbouring cells share a pixel. This is expected at this resolution.</li>
+<li>The data starts in 2018, one year before the first fire year, so that the lagged rainfall and temperature variables have something to look back at.</li>
+</ul>
+<p><strong>Does the weather behave the way it should?</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Month</th>
+<th style="text-align: right;">Rainfall (mm)</th>
+<th style="text-align: right;">Max temperature (°C)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>January</td>
+<td style="text-align: right;">176.9</td>
+<td style="text-align: right;">34.3</td>
+</tr>
+<tr class="even">
+<td>February</td>
+<td style="text-align: right;">158.3</td>
+<td style="text-align: right;">33.7</td>
+</tr>
+<tr class="odd">
+<td>March</td>
+<td style="text-align: right;">129.9</td>
+<td style="text-align: right;">33.5</td>
+</tr>
+<tr class="even">
+<td>April</td>
+<td style="text-align: right;">93.0</td>
+<td style="text-align: right;">32.9</td>
+</tr>
+<tr class="odd">
+<td>May</td>
+<td style="text-align: right;">42.4</td>
+<td style="text-align: right;">31.4</td>
+</tr>
+<tr class="even">
+<td>June</td>
+<td style="text-align: right;">22.2</td>
+<td style="text-align: right;">29.9</td>
+</tr>
+<tr class="odd">
+<td>July</td>
+<td style="text-align: right;">3.7</td>
+<td style="text-align: right;">30.8</td>
+</tr>
+<tr class="even">
+<td>August</td>
+<td style="text-align: right;">26.8</td>
+<td style="text-align: right;">32.1</td>
+</tr>
+<tr class="odd">
+<td>September</td>
+<td style="text-align: right;">35.9</td>
+<td style="text-align: right;">34.8</td>
+</tr>
+<tr class="even">
+<td>October</td>
+<td style="text-align: right;">82.3</td>
+<td style="text-align: right;">35.0</td>
+</tr>
+<tr class="odd">
+<td>November</td>
+<td style="text-align: right;">127.5</td>
+<td style="text-align: right;">35.0</td>
+</tr>
+<tr class="even">
+<td>December</td>
+<td style="text-align: right;">168.7</td>
+<td style="text-align: right;">34.3</td>
+</tr>
+</tbody>
+</table>
+<p>This is the Pantanal’s wet and dry season. Rain peaks in January and almost stops in July. Temperature is lowest in June and highest in October and November.</p>
+<p><strong>Rain and fire do not peak at the same time</strong></p>
+<p>July is the driest month, but September is the worst month for fire. The gap between them is about two months. Heat peaks later still, in October and November.</p>
+<p>The driest month and the worst fire month are about two months apart. This supports building the rainfall variables as lags, looking back one month, three months and over the previous wet season, rather than using rainfall in the month being predicted. Whether those lags carry useful signal is tested later.</p>
+<section id="sources" class="level3">
+<h3 class="anchored" data-anchor-id="sources">Sources</h3>
+<ul>
+<li>CHIRPS fill value and units: NOAA ERDDAP metadata for CHIRPS v2.0 daily, https://coastwatch.pfeg.noaa.gov/erddap/info/chirps20GlobalDailyP05/index.html. The v3 monthly product used here follows the same convention.</li>
+<li>CHIRTS units: Earth Engine catalogue for CHIRTS daily, https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRTS_DAILY. The CHIRTS-ERA5 monthly product used here is reported in the same units.</li>
+</ul>
+<div id="e1d8f68a" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read back what 03_climate.py wrote.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>climate <span class="op">=</span> pd.read_parquet(cfg.OUTPUTS[<span class="st">"climate"</span>])</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"rows:"</span>, <span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(climate)<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"missing rainfall:"</span>, climate[<span class="st">"precip"</span>].isna().<span class="bu">sum</span>())</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"missing temperature:"</span>, climate[<span class="st">"tmax"</span>].isna().<span class="bu">sum</span>())</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>climate.groupby(<span class="st">"month"</span>)[[<span class="st">"precip"</span>, <span class="st">"tmax"</span>]].mean().<span class="bu">round</span>(<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>rows: 632,064
+missing rainfall: 0
+missing temperature: 0</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">precip</th>
+<th data-quarto-table-cell-role="th">tmax</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">month</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1</th>
+<td>176.899994</td>
+<td>34.299999</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2</th>
+<td>158.300003</td>
+<td>33.700001</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3</th>
+<td>129.899994</td>
+<td>33.500000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">4</th>
+<td>93.000000</td>
+<td>32.900002</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">5</th>
+<td>42.400002</td>
+<td>31.400000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">6</th>
+<td>22.200001</td>
+<td>29.900000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">7</th>
+<td>3.700000</td>
+<td>30.799999</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">8</th>
+<td>26.799999</td>
+<td>32.099998</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">9</th>
+<td>35.900002</td>
+<td>34.799999</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">10</th>
+<td>82.300003</td>
+<td>35.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">11</th>
+<td>127.500000</td>
+<td>35.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">12</th>
+<td>168.699997</td>
+<td>34.299999</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Fotheringham, A.S. and Wong, D.W.S. (1991). The modifiable areal unit problem in multivariate statistical analysis. <em>Environment and Planning A</em>, 23(7), 1025-1044.</li>
+<li>Openshaw, S. (1984). <em>The Modifiable Areal Unit Problem</em>. CATMOG 38. Geo Books, Norwich.</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

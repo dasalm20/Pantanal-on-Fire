@@ -60,29 +60,90 @@ whether it burned last month, and a logistic regression on the same predictors.
 
 ## Progress
 
-| Script | Does | Status |
+All twelve stages are built and committed.
+
+| Script | Does | Result |
 |---|---|---|
-| `00_config.py` | Paths, projection, settings, input checks | Done |
-| `01_grid.py` | 5 km grid cut to the Pantanal | Done, 6,584 cells, 150,880 km² |
-| `02_fire.py` | Fires per cell per month | Done, 553,056 rows |
-| `03_climate.py` | Rainfall and temperature per cell | Done, 632,064 rows |
-| `04_water.py` | Flooded share of each cell | DONE |
-| `05_landcover.py` | Land cover share of each cell | Next|
-| `06_access.py` | Distance to roads and rivers | |
-| `07_panel.py` | Join everything, build the lags | |
-| `08_folds.py` | Split the data for testing | |
-| `09_train.py` | Random Forest classifier, tuned by grid search | |
-| `10_evaluate.py` | Metrics, baselines, logistic regression, uncertainty | |
-| `11_experiments.py` | Sensitivity tests | |
-| `12_figures.py` | Maps and plots | |
+| `00_config.py` | Paths, projection, settings, palette | |
+| `01_grid.py` | 5 km grid cut to the Pantanal | 6,584 cells, 150,880 km² |
+| `02_fire.py` | Fires per cell per month | 553,056 rows |
+| `03_climate.py` | Rainfall and temperature per cell | 632,064 rows |
+| `04_water.py` | Flooded share of each cell | 632,064 rows |
+| `05_landcover.py` | Land cover share of each cell | 52,672 rows, 8 classes |
+| `06_access.py` | Distance to roads and rivers | 6,584 rows, 4 distances |
+| `07_panel.py` | Join everything, build the lags, apply the area rule | 126,882 rows, 27 columns |
+| `08_folds.py` | Spatial blocks and leave one year out | 6,042 cells, blocks at 25, 50, 75 km |
+| `09_train.py` | Random Forest, tuned by grid search | 0.438 average precision, 4.0x random |
+| `10_evaluate.py` | 2025 test, three baselines, uncertainty | see below |
+| `11_experiments.py` | Ten sensitivity variants | result holds in all ten |
+| `12_figures.py` | Maps and plots | seven figures |
 
-Each stage is written and committed on its own branch, and the decisions behind each one are recorded in `01-Doc/`.
+Each stage is written and committed on its own branch, and the decisions behind each
+one are recorded in `01-Doc/`.
 
-## Something found along the way
+## Results
 
-Cutting a regular grid to the biome boundary leaves cells of very different sizes, from 0.002 km² to a full 25 km². Checking the fire data against cell size showed that the largest cells record fire twelve times more often than the smallest. Dividing by area cuts that gap to 2.4 times, so most of it is simply the amount of ground a cell covers rather than how fire-prone it is.
+**In cross-validation the model works.** Average precision is 0.438 against a fire
+rate of 0.111, so four times better than ranking cells at random, and the five
+spatial folds agree closely (0.391 to 0.479).
 
-This supports applying a minimum cell size later in the pipeline rather than building it into the grid, and varying it from 0 to 100% of a full cell in the sensitivity analysis.
+**On the held-out year it does not beat the simplest baseline.** 2025 had a fire
+rate of 1.42%, the quietest year in the record. Ranking cells by how often they
+burned in 2019 to 2024 caught 40.7% of 2025's fires in the top 10% of cells. The
+Random Forest caught 29.8%. A paired bootstrap puts that gap at -0.100, range
+-0.170 to -0.034, so it is a real difference and not noise. The forest did beat
+the logistic regression and the burned-last-month baseline on every measure.
+
+**Leave one year out explains why.** The forest beats the baseline in all four
+years with a fire rate above 10%, and loses in all three quiet years. 2025 is the
+quietest of all.
+
+| Year | Share of cell-months burned | Burned before | Random Forest |
+|---|---|---|---|
+| 2025 (held out) | 1.4% | **0.407** | 0.298 |
+| 2022 | 1.9% | **0.317** | 0.280 |
+| 2023 | 3.7% | **0.328** | 0.315 |
+| 2021 | 11.2% | 0.245 | **0.270** |
+| 2024 | 11.3% | 0.233 | **0.253** |
+| 2019 | 17.1% | 0.195 | **0.262** |
+| 2020 | 21.4% | 0.186 | **0.228** |
+
+*Share of that year's fires caught in the top 10% of ranked cells.*
+
+So the answer to the research question is conditional. Conditions known before the
+month starts do carry information about where fire will occur, but only in years
+when a lot of fire occurs. In a quiet year the few fires that do happen are the
+places that always burn, which is exactly what the historical baseline already
+knows, so the weather has nothing left to add.
+
+Ten sensitivity variants were run, each changing one data choice. The result holds
+in all ten, with the gap running from -0.076 to -0.116.
+
+## Things found along the way
+
+**Cell size confounds fire detection.** Cutting a regular grid to the biome
+boundary leaves cells from 0.002 km² to a full 25 km². The largest cells record
+fire twelve times more often than the smallest. Dividing by area cuts that to 2.4
+times, so most of it is simply the amount of ground a cell covers. The minimum cell
+size is therefore applied in `07_panel.py` rather than built into the grid, and
+varied in the sensitivity analysis. It turned out to matter less than expected:
+cross-validation moves only from 0.437 to 0.440 across cut-offs of 50, 75 and 100%
+of a full cell.
+
+**Four land cover classes are really a flood measure.** Wetland, water, grassland
+and flooded savanna swing by up to eight-fold between years and swing against one
+another, because MapBiomas labels the same ground as wetland or water in a wet year
+and as grassland in a dry one. Their sum is stable at 47 to 53%, which confirms it
+is relabelling rather than land changing hands. They are described accordingly, and
+a combined version is tested in the sensitivity analysis.
+
+**Block size changes the score, not the answer.** Cross-validation gives 0.469 with
+25 km blocks, 0.438 with 50 km and 0.412 with 75 km. Smaller blocks put training
+and test cells closer together and flatter the model. The 2025 result is unaffected,
+since the final model trains on all the training years either way.
+
+**MapBiomas Water encodes the month number in the pixel value**, not a yes or no
+flag, which changes how the water share is calculated.
 
 ## Feedback from the proposal
 
@@ -95,7 +156,7 @@ The proposal was reviewed in October. Three changes followed:
 - The problem statement and objectives were tightened to name the modelling approach
   and the specific comparisons being made.
 
-## Planned workflow
+## workflow
 
 ```text
 03-Data/  (raw, not tracked)

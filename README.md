@@ -12,19 +12,36 @@ Where a suggestion from an AI model led to a change in the analysis, that
 decision is recorded in the project notebook in `01-Doc/`, alongside the
 reasoning and the evidence behind it.
 
-### How to read the commit history
+## How to read the commit history
 
 Before building this pipeline I ran a preliminary version locally to work out
-what the data looked like and how the project should be structured. That earlier
-work is not in this repository. What is here is the rebuild: each stage written
-again in order, with the decisions and checks recorded as they were made.
+whether the data was usable and roughly how the project should be structured.
+That earlier work is not in this repository. What is here is the rebuild: each
+stage written again in order, with the decisions and checks recorded as they were
+made.
 
-So the commits move quickly, and some land within minutes of each other. That is
-because the structure was already worked out, not because the code was written
-from nothing at that speed. The point of the repository is the reasoning, not the
-typing: what each script decides, what was measured before deciding it, what the
-checks returned, and anything that turned up along the way and changed the
-approach.
+So the commits move quickly, and some land within minutes of each other. The
+structure was already mapped out, so the writing was fast. The repository is not a
+record of typing. It is a record of reasoning: what each script decides, what was
+measured before deciding it, what the checks returned, and what turned up along
+the way.
+
+The decisions are still being made here. Working through the pipeline a second
+time, more carefully, surfaced things the preliminary run had missed. A few
+examples:
+
+- The MapBiomas water rasters encode the month number in the pixel value rather
+  than a yes or no flag, which changes how the water share is calculated.
+- Four of the eight land cover classes swing by up to eight-fold between years and
+  swing against each other, because MapBiomas labels the same ground as wetland or
+  water in a wet year and as grassland in a dry one. They are partly a flood
+  measure, not land use, which changed how they are described and added a
+  sensitivity test.
+- The first version of the access script used a search box too narrow to guarantee
+  the nearest road had been found, which was caught by a check and fixed.
+
+So this repository does two things at once: it follows a process that was planned
+in advance, and it reviews that process closely enough to change it.
 
 ## What this project does
 

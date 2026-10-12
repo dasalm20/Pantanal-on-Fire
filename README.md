@@ -12,6 +12,20 @@ Where a suggestion from an AI model led to a change in the analysis, that
 decision is recorded in the project notebook in `01-Doc/`, alongside the
 reasoning and the evidence behind it.
 
+### How to read the commit history
+
+Before building this pipeline I ran a preliminary version locally to work out
+what the data looked like and how the project should be structured. That earlier
+work is not in this repository. What is here is the rebuild: each stage written
+again in order, with the decisions and checks recorded as they were made.
+
+So the commits move quickly, and some land within minutes of each other. That is
+because the structure was already worked out, not because the code was written
+from nothing at that speed. The point of the repository is the reasoning, not the
+typing: what each script decides, what was measured before deciding it, what the
+checks returned, and anything that turned up along the way and changed the
+approach.
+
 ## What this project does
 
 The Brazilian Pantanal is the largest tropical wetland in the world. In 2020 about 29% of it burned, and an estimated 17 million vertebrates were killed directly by those fires. The biome covers roughly 150,000 km², so fire response has to be prioritised somewhere, and that means knowing where fire is most likely before a month starts.

@@ -862,6 +862,30 @@ missing temperature: 0</code></pre>
 <p><strong>AI-assisted decisions</strong></p>
 <p>Adopted after review: padding the box; dropping pedestrian-only types while keeping tracks; measuring from the polygon rather than the point; building the main-roads and rivers-only versions now for the later test; checking every distance against the pad.</p>
 <p>The first run used a 0.5 degree pad and the AI flagged that three of the four maximum distances exceeded it, so they could not be trusted. Widening to 1.5 degrees returned identical numbers, so the original pad had been fine, but it is now shown rather than assumed.</p>
+</section>
+<section id="panel.py" class="level2">
+<h2 class="anchored" data-anchor-id="panel.py">07_panel.py</h2>
+<p><strong>Does:</strong> joins the five earlier outputs, builds the lagged predictors, applies the minimum cell area.</p>
+<p><strong>Output:</strong> <code>panel.parquet</code>, 126,882 rows, 27 columns. One row is one cell in one target month.</p>
+<p><strong>Decisions</strong></p>
+<ul>
+<li>Months converted to a running counter, so a lag is a shift of one row.</li>
+<li><code>transform</code> used for the rolling windows, which keeps the shift inside each cell.</li>
+<li>Every predictor shifted back at least a month, so no row sees the month being predicted.</li>
+<li>Wet season is November to March, labelled by the year it feeds. An August 2020 row uses November 2019 to March 2020.</li>
+<li>Land cover taken from the previous year. Access is one 2020 snapshot, so static.</li>
+<li>Landcover <code>water</code> renamed <code>lc_water</code>, so it cannot be confused with the monthly water share.</li>
+<li>Minimum cell area applied here, not in the grid, so <code>11_experiments.py</code> can vary it without rebuilding upstream. At 50% of a full cell it drops 8.2% of cells, loses 1.65% of the area, and caps the exposure spread at 2:1.</li>
+</ul>
+<p><strong>Checks</strong></p>
+<p>126,882 rows, matching 6,042 cells x 7 years x 3 months. No missing values.</p>
+<p>Lags checked two ways. On the September 2020 row, <code>rain_1m</code> is exactly August’s value from the monthly table. Across the panel <code>rain_1m</code> averages 3.3 mm on August rows, 24.7 on September and 29.5 on October, all dry season, and the 3.3 mm matches the July mean from <code>03_climate.py</code>.</p>
+<p>The 114.7 mm August value was followed up. August 2020 rain runs 0 to 122.9 mm across the biome, median 7.7 mm, and that cell is at the far southern edge where winter fronts bring rain. A real north to south gradient.</p>
+<p>Fire rate in target months: 17.1% (2019), 21.4%, 11.2%, 1.9%, 3.7%, 11.3%, 1.4% (2025).</p>
+<p><strong>AI-assisted decisions</strong></p>
+<p>Adopted after review: the running month counter; <code>transform</code> for the rolling windows; labelling the wet season by the year it feeds; renaming the landcover water column; tracing one row by hand.</p>
+<p>An early version shifted the grouped rolling result directly, which leaks one cell’s last value into the next. Caught in review and replaced with <code>transform</code>.</p>
+<p>The 114.7 mm August value was flagged as implausible. Checking it confirmed the lag was right and the value real, which surfaced the rainfall gradient.</p>
 <hr>
 </section>
 <section id="references" class="level2">

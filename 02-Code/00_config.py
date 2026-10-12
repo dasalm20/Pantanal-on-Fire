@@ -46,4 +46,17 @@ TARGET_MONTHS = [8, 9, 10]
 LAG_START     = 2018
 RANDOM_SEED   = 654
 
+# Smallest cell kept, in km2. Set at 50% of a full cell.
+# 01_grid.py measured the clipped cells: 1,100 are partial, from 0.002 to
+# 25 km2, so the largest covers 12,700 times the ground of the smallest.
+# 02_fire.py measured the effect: the biggest cells record fire 12 times
+# more often than the smallest, falling to 2.4 times once divided by area,
+# so most of that gradient is exposure rather than fire risk.
+# A 50% cut-off drops 8.2% of cells to lose 1.65% of the area, and caps the
+# exposure spread at 2:1. Varied from 0 to 100% in 11_experiments.py.
+MIN_AREA_KM2 = 0.50 * (GRID_M ** 2) / 1e6
+
+# Wet season for the seasonal rainfall and water predictors. November to
+# March, so it always ends before the August to October target months.
+WET_MONTHS = [11, 12, 1, 2, 3]
 

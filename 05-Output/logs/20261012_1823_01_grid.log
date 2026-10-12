@@ -1,0 +1,53 @@
+<ArrowStringArray>
+['Amazônia', 'Caatinga', 'Cerrado', 'Mata Atlântica', 'Pampa', 'Pantanal']
+Length: 6, dtype: str
+6
+1 EPSG:4674
+EPSG:4674
+1 EPSG:31981
+Traceback (most recent call last):
+  File "/Users/nikos/Documents/Projects/Pantanal-on-Fire/02-Code/01_grid.py", line 54, in <module>
+    pantanal.plot()
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/geopandas/plotting.py", line 1408, in __call__
+    return plot_dataframe(data, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/geopandas/plotting.py", line 951, in plot_dataframe
+    return plot_series(
+           ^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/geopandas/plotting.py", line 583, in plot_series
+    _, ax = plt.subplots(figsize=figsize)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/matplotlib/pyplot.py", line 1886, in subplots
+    fig = figure(**fig_kw)
+          ^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/matplotlib/pyplot.py", line 1096, in figure
+    manager = new_figure_manager(
+              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/matplotlib/pyplot.py", line 575, in new_figure_manager
+    _warn_if_gui_out_of_main_thread()
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/matplotlib/pyplot.py", line 552, in _warn_if_gui_out_of_main_thread
+    canvas_class = cast(type[FigureCanvasBase], _get_backend_mod().FigureCanvas)
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/matplotlib/pyplot.py", line 390, in _get_backend_mod
+    switch_backend(rcParams._get("backend"))
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/matplotlib/pyplot.py", line 445, in switch_backend
+    module = backend_registry.load_backend_module(newbackend)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/matplotlib/backends/registry.py", line 317, in load_backend_module
+    return importlib.import_module(module_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/pantanal/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'positron'

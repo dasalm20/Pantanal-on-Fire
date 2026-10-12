@@ -25,3 +25,5 @@ Cells below 1 km²: 125
 Total clipped area: 150879.7276796208
 Sample points inside own cell: True
 CRS of saved file: EPSG:31981
+/Users/nikos/Documents/Projects/Pantanal-on-Fire/02-Code/01_grid.py:234: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()

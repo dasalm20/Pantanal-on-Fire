@@ -118,24 +118,3 @@ by_year["rate"] = (by_year["rate"] * 100).round(2)
 print("\nleave one year out")
 print(by_year.to_string())
 
-'''
-rows: 6,042, one per cell kept
-
-Blocks:
-  25 km  319 blocks | median 25 cells
-  50 km   98 blocks | median 87 cells
-  75 km   47 blocks | median 146 cells
-
-Check 1: every cell appears exactly once, so no cell sits in two blocks.
-
-Check 2, folds on 50 km blocks:
-  Even at 21,744 to 21,762 rows, 18 to 20 blocks, about 1,208 cells each.
-  Fire rate runs 9.49% to 12.20%, so no fold is unusually easy or hard.
-  Every fold holds over 2,000 fires, so all five can be scored.
-
-Check 3, leave one year out:
-  2019 17.06% | 2020 21.35% | 2021 11.20%
-  2022  1.93% | 2023  3.66% | 2024 11.28%
-  2022 (350 fires) and 2023 (664) are thin against 2020 (3,870), so those
-  two years will score noisily. Noted for 10_evaluate.py.
-'''

@@ -43,6 +43,8 @@ area_bin
 (12.5, 20.0]    0.034391
 (20.0, 25.0]    0.043661
 Name: rate_per_km2, dtype: float64
+/Users/nikos/Documents/Projects/Pantanal-on-Fire/02-Code/02_fire.py:173: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
 month
 1     0.027968
 2     0.017987

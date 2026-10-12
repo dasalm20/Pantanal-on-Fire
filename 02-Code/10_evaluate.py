@@ -93,12 +93,16 @@ scores = {
 }
 
 #---Two ways of scoring a ranking---
-# top_pct is the share of the real fires that fall inside the highest ranked
-# cells. That is the number that matters in practice.
-def top_pct(yy, s, pct):
+# Scores tie heavily in the baselines: hist_rate takes 19 values and
+# fire_prev is 0/1. argsort would break those ties by row order, so the
+# cut-off would depend on how the table happens to be sorted. Averaging
+# over random tie-breaks removes that.
+# R equivalent: rank(-s, ties.method = "random")
+def top_pct(yy, s, pct, n_draws=20, seed=cfg.RANDOM_SEED):
     k = int(np.ceil(len(s) * pct))
-    return yy[np.argsort(-s)[:k]].sum() / yy.sum()
-
+    g = np.random.default_rng(seed)
+    return np.mean([yy[np.lexsort((g.random(len(s)), -s))[:k]].sum() / yy.sum()
+                    for _ in range(n_draws)])
 def top10(yy, s):
     return top_pct(yy, s, 0.10)
 
@@ -148,7 +152,9 @@ for _ in range(1000):
 
 for label, d in [("avg precision", d_ap), ("top 10%", d_10)]:
     lo, hi = np.percentile(d, [2.5, 97.5])
-    print(f"\n{label}, forest minus burned before: {np.mean(d):+.4f}  [{lo:+.4f}, {hi:+.4f}]")
+    obs = {"avg precision": average_precision_score(y, rf) - average_precision_score(y, hb),
+       "top 10%":       top10(y, rf) - top10(y, hb)}[label]
+    print(f"\n{label}, forest minus burned before: {obs:+.4f}  [{lo:+.4f}, {hi:+.4f}]")
     print("  difference is clear:", not (lo < 0 < hi))
 
 #---Does the same thing happen inside the training years?---
@@ -205,7 +211,7 @@ print("  flagged:  ", f"{flag.sum():,} of {len(flag):,} cells")
 # Shuffles one column at a time and measures how far the score drops. Unlike
 # the built-in importances it does not favour continuous variables.
 perm = permutation_importance(model, test[FEATURES], y,
-                              scoring="average_precision", n_repeats=5,
+                              scoring="average_precision", n_repeats=20,
                               random_state=cfg.RANDOM_SEED, n_jobs=-1)
 
 imp = pd.Series(perm.importances_mean, index=FEATURES).sort_values(ascending=False)
@@ -227,52 +233,3 @@ pd.DataFrame(loyo).to_csv(cfg.OUTPUT / "by_year.csv", index=False)
 
 print("\nsaved predictions, results, importances and by year")
 
-'''
-2025 is the held-out year: 18,126 rows, fire rate 1.42% against 11.08% in
-training. It is the quietest year in the record.
-
-Results on 2025, fire rate 0.0142
-                   avg precision  roc auc  top 1%  top 5%  top 10%
-  random forest           0.0529   0.6541  0.0698  0.2054   0.2984
-  logistic                0.0453   0.5724  0.0853  0.1628   0.2248
-  burned before           0.0607   0.7105  0.1124  0.2829   0.4070
-  burned last month       0.0270   0.5491  0.1008  0.1163   0.1550
-
-The forest beats the logistic regression and burned last month on every
-measure. Against burned before it loses, and the paired tests split:
-  avg precision  -0.0057  [-0.0288, +0.0171]  not clear
-  top 10%        -0.1002  [-0.1696, -0.0342]  clear
-
-So on average precision the two cannot be separated, but on top 10%
-capture, the number that matters in practice, burned before is genuinely
-ahead on 2025.
-
-Leave one year out, forest vs burned before on both measures:
-  2020  rate 0.214 | AP 0.3888 vs 0.3045 | top10 0.2274 vs 0.1858  forest
-  2019  rate 0.171 | AP 0.3522 vs 0.2645 | top10 0.2623 vs 0.1944  forest
-  2024  rate 0.113 | AP 0.2311 vs 0.2092 | top10 0.2533 vs 0.2328  forest
-  2021  rate 0.112 | AP 0.2463 vs 0.2035 | top10 0.2695 vs 0.2443  forest
-  2023  rate 0.037 | AP 0.0934 vs 0.1013 | top10 0.3148 vs 0.3283  before
-  2022  rate 0.019 | AP 0.0634 vs 0.0638 | top10 0.2800 vs 0.3171  before
-
-The two measures agree on every year. The forest wins both in all four
-years with a fire rate above 10%, and loses both in the two quiet years.
-2025 at 1.42% is the quietest of all and the gap there is the widest.
-
-The model's advantage over knowing where fire usually happens depends on
-how active the year is. In an active year the weather carries information
-the model can use. In a quiet year the few fires that occur are the
-persistent ignition hotspots, which is what the historical baseline
-already encodes, so the weather adds nothing.
-
-Permutation importance on 2025 is led by tmax_1m 0.024, tmax_3m 0.022,
-fire_prev 0.017 and dist_road 0.011. Land cover and water sit at or below
-zero, so in a quiet year they carry nothing. Sharper than the built-in
-importances in 09_train.py and confirming the suspicion recorded there
-that the water variables were adding little.
-
-Threshold 0.49, chosen out of fold on the training years. On 2025 it flags
-1,022 of 18,126 cells, precision 0.056, recall 0.221. The low precision is
-expected: fitted where fire occurs in 11% of rows, applied where it occurs
-in 1.4%. The ranking results do not depend on any threshold.
-'''

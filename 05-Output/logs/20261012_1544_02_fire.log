@@ -1,0 +1,68 @@
+Index(['latitude', 'longitude', 'brightness', 'scan', 'track', 'acq_date',
+       'acq_time', 'satellite', 'instrument', 'confidence', 'version',
+       'bright_t31', 'frp', 'daynight', 'type'],
+      dtype='str')
+type
+0    9857094
+2     105937
+3      17358
+Name: count, dtype: int64
+confidence
+n    8503921
+l     908404
+h     568064
+Name: count, dtype: int64
+instrument
+VIIRS    9980389
+Name: count, dtype: int64
+satellite
+N20    9980389
+Name: count, dtype: int64
+type filter: 9,980,389 -> 9,857,094 detections
+bounding box: 9,857,094 -> 663,688 detections
+detections inside the Pantanal: 548,871
+confidence
+n    456949
+l     46196
+h     45726
+Name: count, dtype: int64
+rows: 553056 expected: 553056
+cell-months with fire: 26310
+prevalence: 0.04757203610484291
+area_bin
+(0.0, 1.0]      0.004190
+(1.0, 5.0]      0.017321
+(5.0, 12.5]     0.033520
+(12.5, 20.0]    0.041741
+(20.0, 25.0]    0.050315
+Name: fire_binary, dtype: float64
+area_bin
+(0.0, 1.0]      0.018002
+(1.0, 5.0]      0.027329
+(5.0, 12.5]     0.036101
+(12.5, 20.0]    0.034391
+(20.0, 25.0]    0.043661
+Name: rate_per_km2, dtype: float64
+month
+1     0.027968
+2     0.017987
+3     0.019723
+4     0.017488
+5     0.019701
+6     0.030268
+7     0.047583
+8     0.086270
+9     0.104409
+10    0.098789
+11    0.070300
+12    0.030377
+Name: fire_binary, dtype: float64
+year
+2019    0.078233
+2020    0.098509
+2021    0.046666
+2022    0.020719
+2023    0.029086
+2024    0.050438
+2025    0.009353
+Name: fire_binary, dtype: float64

@@ -262,7 +262,7 @@ Grid size: 5000 m</code></pre>
 <li>Two CHIRPS folders and two Tmax folders exist on disk. The config points only at <code>CHIRPS_monthly_2018_2025</code> and <code>CHIRTS-ERA5_Tmax_monthly_2018_2025</code>. All results come from those.</li>
 <li>Climate data starts in 2018 so that lagged predictors are available for the first target year, 2019.</li>
 <li>Land cover is taken from the previous year (2018 for the 2019 target, and so on), so no information from the target year enters the predictors.</li>
-<li>The MapBiomas Water files hold one year each, with twelve bands named <code>water_YYYY_MM</code>. The pixel values are 0 or 1, so the month is carried in the band name rather than in the value.</li>
+<li>The MapBiomas Water files hold one year each, with twelve bands named water_YYYY_MM. Water pixels carry the month number as their value, so August water is 8 and October is 10, with 0 for non-water. Water presence is therefore value &gt; 0.</li>
 <li>Roads and waterways come from a single 2020 snapshot applied across 2019-2025. Road networks change over that period, so distance to roads is treated as a static predictor. Recorded as a limitation.</li>
 </ul>
 </section>
@@ -273,7 +273,7 @@ Grid size: 5000 m</code></pre>
 <p><strong>CHIRPS v3 monthly rainfall</strong> - Downloaded monthly TIFFs from the Climate Hazards Center archive using a scripted URL pattern. - January 2018 through December 2025, 96 files. - Feeds previous-month, previous-3-month and previous wet-season rainfall.</p>
 <p><strong>CHIRTS-ERA5 monthly Tmax</strong> - Same approach and date range as CHIRPS, 96 files. - Feeds previous-month and previous-3-month maximum temperature.</p>
 <p><strong>MapBiomas Collection 11 annual land cover</strong> - Downloaded annual Brazil land-cover TIFFs from the MapBiomas public Google Cloud Storage files. - Initially 2019-2025. 2018 was added afterwards so that the 2019 target year could use previous-year land cover. - Final coverage 2018-2025, used one year lagged throughout to avoid same-year leakage.</p>
-<p><strong>MapBiomas Water Collection 5</strong> - Exported from the Google Earth Engine asset <code>projects/mapbiomas-public/assets/brazil/water/collection5/mapbiomas_brazil_collection5_water_monthly_v4</code>, clipped to the Pantanal. - One 12-band stack per year, 2018-2025. Earth Engine split each annual export into two tiles because of raster size, giving 16 TIFFs. - Yearly tile pairs are combined with VRT mosaics rather than duplicating the rasters. - Each yearly file holds twelve bands named <code>water_YYYY_MM</code>, with pixel values of 0 or 1. The month is in the band name, not the pixel value.</p>
+<p><strong>MapBiomas Water Collection 5</strong> - Exported from the Google Earth Engine asset <code>projects/mapbiomas-public/assets/brazil/water/collection5/mapbiomas_brazil_collection5_water_monthly_v4</code>, clipped to the Pantanal. - One 12-band stack per year, 2018-2025. Earth Engine split each annual export into two tiles because of raster size, giving 16 TIFFs. - Yearly tile pairs are combined with VRT mosaics rather than duplicating the rasters. - Each yearly file holds twelve bands named water_YYYY_MM. Water pixels carry the month number as their value, verified by reading band 8 of the 2018 file, which has a maximum of 8.</p>
 <p><strong>OpenStreetMap roads and waterways</strong> - Downloaded the historical Geofabrik Centro-Oeste archive <code>centro-oeste-200101-free.shp.zip</code>, a 2020-01-01 snapshot. - Extracted <code>gis_osm_roads_free_1.shp</code> and <code>gis_osm_waterways_free_1.shp</code>. - Used to compute distance from each cell to the nearest road and nearest mapped waterway.</p>
 <div id="c99a97a2" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Confirm every raw input is still where the config expects it.</span></span>
@@ -765,8 +765,38 @@ missing temperature: 0</code></pre>
 </div>
 </div>
 </div>
-<hr>
 </section>
+</section>
+<section id="water.py" class="level2">
+<h2 class="anchored" data-anchor-id="water.py">04_water.py</h2>
+<p><strong>Does:</strong> reads the MapBiomas Water monthly rasters, mosaics the two Earth Engine tiles for each year, lays the 5 km grid over them, and counts what share of each cell was under water in each month from 2018 to 2025.</p>
+<p><strong>Output:</strong> <code>water_month.parquet</code>, 632,064 rows (6,584 cells x 8 years x 12 months).</p>
+<p><strong>Decisions</strong></p>
+<ul>
+<li>Water pixels carry the month number as their value, not a 0/1 flag, so water is read as any value above 0. Confirmed by checking band 8 of the 2018 file, whose maximum is 8.</li>
+<li>The grid is reprojected to EPSG:4326 to match the rasters rather than warping 389 million pixels per band into EPSG:31981. Reprojecting the vector is far cheaper and resamples nothing.</li>
+<li>Cell IDs are burned into a raster once with <code>rasterio.features.rasterize</code>, and pixels are tallied with <code>numpy.bincount</code>. This is the standard zonal-statistics approach, the same method used by <code>rasterstats</code>, and avoids looping over 6,584 polygons eight times over.</li>
+<li>One band is read at a time. Mosaicking all twelve bands at once holds about 4.7 GB in memory.</li>
+<li>The two tiles per year do not overlap: they share the same left and right edge, and the second tile’s top edge equals the first tile’s bottom edge exactly, so no pixel is counted twice.</li>
+</ul>
+<p><strong>Checks</strong></p>
+<p>Mean water share peaks in April and May and bottoms out in October and November. Rainfall peaks between November and March, so inundation lags rainfall by two to three months. This is the known Pantanal flood pulse, where water from the northern highlands drains slowly south across a very flat basin (Hamilton et al., 1996). A peak in January would have meant the bands were read in the wrong order.</p>
+<p>Mean water share falls from 5.9% in 2018 to 2.4% in 2021 and stays low, matching the severe 2019 to 2021 drought in the basin (Marengo et al., 2021).</p>
+<p><strong>Limitations</strong></p>
+<ul>
+<li>MapBiomas Water maps open surface water. Water beneath flooded vegetation is not seen, so this variable understates total inundation.</li>
+<li>33 cells hold fewer than 100 pixels, and the smallest holds one, so their water share is coarse or binary. This is the same unequal-exposure issue recorded in <code>01_grid.py</code>. No cells are dropped here. The minimum cell area is applied in <code>07_panel.py</code>.</li>
+</ul>
+<p><strong>Documentation used</strong></p>
+<ul>
+<li><code>rasterio.merge.merge</code> — rasterio.readthedocs.io/en/stable/api/rasterio.merge.html</li>
+<li><code>rasterio.features.rasterize</code> — rasterio.readthedocs.io/en/stable/api/rasterio.features.html</li>
+<li><code>numpy.bincount</code> — numpy.org/doc/stable/reference/generated/numpy.bincount.html</li>
+<li><code>rasterstats</code> for the zonal-counting approach — pythonhosted.org/rasterstats/</li>
+</ul>
+<p>Citations to verify later:</p>
+<p>Hamilton, S.K., Sippel, S.J. and Melack, J.M. (1996). Inundation patterns in the Pantanal wetland of South America determined from passive microwave remote sensing. Archiv für Hydrobiologie, 137(1), 1-23. Marengo, J.A. et al.&nbsp;(2021). Extreme drought in the Brazilian Pantanal in 2019-2020: characterization, causes, and impacts. Frontiers in Water, 3, 639204.</p>
+<hr>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>

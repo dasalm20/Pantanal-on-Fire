@@ -35,8 +35,8 @@ whether it burned last month, and a logistic regression on the same predictors.
 | `01_grid.py` | 5 km grid cut to the Pantanal | Done, 6,584 cells, 150,880 km² |
 | `02_fire.py` | Fires per cell per month | Done, 553,056 rows |
 | `03_climate.py` | Rainfall and temperature per cell | Done, 632,064 rows |
-| `04_water.py` | Flooded share of each cell | Next |
-| `05_landcover.py` | Land cover share of each cell | |
+| `04_water.py` | Flooded share of each cell | DONE |
+| `05_landcover.py` | Land cover share of each cell | Next|
 | `06_access.py` | Distance to roads and rivers | |
 | `07_panel.py` | Join everything, build the lags | |
 | `08_folds.py` | Split the data for testing | |
@@ -63,7 +63,7 @@ The proposal was reviewed in October. Three changes followed:
   and previous-month fire.
 - The problem statement and objectives were tightened to name the modelling approach
   and the specific comparisons being made.
-  
+
 ## Planned workflow
 
 ```text

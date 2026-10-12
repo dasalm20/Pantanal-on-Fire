@@ -60,7 +60,8 @@ whether it burned last month, and a logistic regression on the same predictors.
 
 ## Progress
 
-All twelve stages are built and committed.
+All twelve pipeline stages are built and committed, plus three additional
+testing scripts and a master script that runs everything in order.
 
 | Script | Does | Result |
 |---|---|---|
@@ -73,51 +74,72 @@ All twelve stages are built and committed.
 | `06_access.py` | Distance to roads and rivers | 6,584 rows, 4 distances |
 | `07_panel.py` | Join everything, build the lags, apply the area rule | 126,882 rows, 27 columns |
 | `08_folds.py` | Spatial blocks and leave one year out | 6,042 cells, blocks at 25, 50, 75 km |
-| `09_train.py` | Random Forest, tuned by grid search | 0.438 average precision, 4.0x random |
+| `09_train.py` | Random Forest, tuned by grid search | 0.4658 average precision, 4.0x random |
 | `10_evaluate.py` | 2025 test, three baselines, uncertainty | see below |
-| `11_experiments.py` | Ten sensitivity variants | result holds in all ten |
+| `11_experiments.py` | Ten sensitivity variants | see below |
 | `12_figures.py` | Maps and plots | seven figures |
+
+`02-Code/additional_testing/` holds three further scripts. `a1_panel_all.py`
+and `a2_folds_all.py` rebuild the panel and the folds with no minimum cell
+area, so `a3_area_sweep.py` can test cut-offs looser than the 50% baseline.
+
+`02-Code/000_master.py` runs all fifteen scripts in order, each as its own
+process so memory is released between stages, and writes a log per stage to
+`05-Output/logs/`. A full run takes about 72 minutes.
 
 Each stage is written and committed on its own branch, and the decisions behind each
 one are recorded in `01-Doc/`.
 
 ## Results
 
-**In cross-validation the model works.** Average precision is 0.438 against a fire
-rate of 0.111, so four times better than ranking cells at random, and the five
-spatial folds agree closely (0.391 to 0.479).
+**In cross-validation the model works.** Average precision is 0.4658 against a
+fire rate of 0.115, so four times better than ranking cells at random, and the
+five spatial folds agree closely (0.450 to 0.500).
 
-**On the held-out year it does not beat the simplest baseline.** 2025 had a fire
-rate of 1.42%, the quietest year in the record. Ranking cells by how often they
-burned in 2019 to 2024 caught 40.7% of 2025's fires in the top 10% of cells. The
-Random Forest caught 29.8%. A paired bootstrap puts that gap at -0.100, range
--0.170 to -0.034, so it is a real difference and not noise. The forest did beat
-the logistic regression and the burned-last-month baseline on every measure.
+**On the held-out year the answer depends on how the ranking is measured.**
+2025 had a fire rate of 1.57%, the quietest year in the record. Across the
+whole ranking the Random Forest is ahead of the burned-before baseline:
+average precision 0.1100 against 0.0698, a gap of +0.0402 with a paired
+bootstrap range of +0.0097 to +0.0794, so the difference is real and not
+noise. On the top 10% of cells, the shortlist a fire manager would actually
+work from, the two cannot be separated: the forest catches 39.8% of 2025's
+fires and the baseline 41.9%, a gap of -0.0211 with a range of -0.0739 to
++0.0409. The forest beat the logistic regression and the burned-last-month
+baseline on every measure.
 
-**Leave one year out explains why.** The forest beats the baseline in all four
-years with a fire rate above 10%, and loses in all three quiet years. 2025 is the
-quietest of all.
+**Leave one year out shows where the shortlist advantage comes from.** On the
+top 10%, the forest wins in every year with a fire rate above 10% and loses in
+every year below it, with no exceptions.
 
 | Year | Share of cell-months burned | Burned before | Random Forest |
 |---|---|---|---|
-| 2025 (held out) | 1.4% | **0.407** | 0.298 |
-| 2022 | 1.9% | **0.317** | 0.280 |
-| 2023 | 3.7% | **0.328** | 0.315 |
-| 2021 | 11.2% | 0.245 | **0.270** |
-| 2024 | 11.3% | 0.233 | **0.253** |
-| 2019 | 17.1% | 0.195 | **0.262** |
-| 2020 | 21.4% | 0.186 | **0.228** |
+| 2025 (held out) | 1.6% | **0.419** | 0.398 |
+| 2022 | 2.1% | **0.325** | 0.317 |
+| 2023 | 3.9% | **0.339** | 0.306 |
+| 2021 | 11.6% | 0.235 | **0.292** |
+| 2024 | 11.7% | 0.235 | **0.263** |
+| 2019 | 17.6% | 0.199 | **0.233** |
+| 2020 | 22.1% | 0.183 | **0.236** |
 
 *Share of that year's fires caught in the top 10% of ranked cells.*
 
-So the answer to the research question is conditional. Conditions known before the
-month starts do carry information about where fire will occur, but only in years
-when a lot of fire occurs. In a quiet year the few fires that do happen are the
-places that always burn, which is exactly what the historical baseline already
-knows, so the weather has nothing left to add.
+Measured by average precision instead, the forest wins six of the seven years,
+losing only 2023.
 
-Ten sensitivity variants were run, each changing one data choice. The result holds
-in all ten, with the gap running from -0.076 to -0.116.
+So the answer to the research question is conditional. Conditions known before
+the month starts do carry information about where fire will occur, and that
+information is enough to rank the whole biome better than fire history alone
+in almost every year. It is only enough to improve the top 10% shortlist in
+years when a lot of fire occurs. In a quiet year the few fires that happen are
+the places that always burn, which is what the historical baseline already
+knows, so the weather has little left to add at the top of the ranking.
+
+Fifteen sensitivity configurations were run, ten in `11_experiments.py` and
+five minimum cell areas in `a3_area_sweep.py`. The average precision gap is
+positive in all fifteen, from +0.0306 to +0.0441, so the ranking advantage
+does not rest on any one data choice. The top 10% gap stays near zero
+throughout, from -0.0695 to +0.0023, and is negative in fourteen of the
+fifteen.
 
 ## Things found along the way
 
@@ -137,13 +159,26 @@ and as grassland in a dry one. Their sum is stable at 47 to 53%, which confirms 
 is relabelling rather than land changing hands. They are described accordingly, and
 a combined version is tested in the sensitivity analysis.
 
-**Block size changes the score, not the answer.** Cross-validation gives 0.469 with
-25 km blocks, 0.438 with 50 km and 0.412 with 75 km. Smaller blocks put training
-and test cells closer together and flatter the model. The 2025 result is unaffected,
-since the final model trains on all the training years either way.
+**Block size changes the score, not the answer.** Cross-validation gives 0.5028
+with 25 km blocks, 0.4658 with 50 km and 0.4161 with 75 km. Smaller blocks put
+training and test cells closer together and flatter the model. The 2025 result
+is identical across all three, since the final model trains on all the training
+years either way.
 
 **MapBiomas Water encodes the month number in the pixel value**, not a yes or no
-flag, which changes how the water share is calculated.
+It turned out to matter less than expected: cross-validation moves only from
+0.4658 to 0.4704 across cut-offs of 50, 75 and 100% of a full cell, and the
+full sweep from 0 to 100% in `a3_area_sweep.py` moves only from 0.4411 to
+0.4542.
+
+**Tied scores had to be broken at random.** The burned-before baseline is an
+average over 18 cell-months, so it takes only 19 distinct values, and the
+burned-last-month baseline is either 0 or 1. The 10% cut-off therefore falls
+inside a large group of cells with identical scores, and sorting alone settles
+those by row order, which made the result depend on how the table happened to
+be sorted. Averaging over 20 random tie-breaks removed that. It strengthened
+both baselines and narrowed the model's margin: the top 10% gap moved from
+-0.0140 to -0.0211.
 
 ## Feedback from the proposal
 

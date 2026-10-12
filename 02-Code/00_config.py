@@ -60,3 +60,17 @@ MIN_AREA_KM2 = 0.50 * (GRID_M ** 2) / 1e6
 # March, so it always ends before the August to October target months.
 WET_MONTHS = [11, 12, 1, 2, 3]
 
+# Colours, so every figure in the project reads the same way.
+# Fire runs green to red: green is safe, red is likely to burn.
+# Each input keeps its own family, so a reader can tell at a glance what a
+# map is showing.
+COLOURS = {
+    "fire":    "RdYlGn_r",   # fire risk and fire history, green low to red high
+    "heat":    "OrRd",       # temperature
+    "water":   "Blues",      # rainfall and flooding
+    "veg":     "Greens",     # land cover
+    "accent":  "#15594d",    # single-series bars and lines, matches the study area map
+    "mark":    "#b2182b",    # a flat red for "this one burned"
+    "neutral": "#eeeeee",    # cells with nothing to show
+    "ramp":    ["#fdbb84", "#e34a33", "#7f0000"],   # three steps for grouped bars
+}

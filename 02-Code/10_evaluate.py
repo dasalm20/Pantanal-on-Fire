@@ -155,7 +155,10 @@ for label, d in [("avg precision", d_ap), ("top 10%", d_10)]:
 # Each training year predicted by a model fitted on the other five, against a
 # burned-before rate built from those same five years. Both measures are
 # reported, so the quiet years and the active years are compared the same way.
+# Saved as well, since this is the main finding and 12_figures.py draws it.
 print("\nleave one year out")
+loyo = []
+
 for yr in cfg.TRAIN_YEARS:
     tr = train[train["year"] != yr]
     te = train[train["year"] == yr]
@@ -167,9 +170,27 @@ for yr in cfg.TRAIN_YEARS:
     p_hb = te["ID"].map(rate).values
 
     yy = te["fire"].astype(int).values
+    loyo.append({
+        "year": yr,
+        "fire rate": yy.mean(),
+        "ap forest": average_precision_score(yy, p_rf),
+        "ap before": average_precision_score(yy, p_hb),
+        "top10 forest": top10(yy, p_rf),
+        "top10 before": top10(yy, p_hb),
+    })
     print(f"  {yr}  rate {yy.mean():.3f} |"
           f" AP {average_precision_score(yy, p_rf):.4f} vs {average_precision_score(yy, p_hb):.4f} |"
           f" top10 {top10(yy, p_rf):.4f} vs {top10(yy, p_hb):.4f}")
+
+# 2025 added so the figure can show all seven years on one line.
+loyo.append({
+    "year": cfg.VAL_YEAR,
+    "fire rate": y.mean(),
+    "ap forest": results.loc["random forest", "avg precision"],
+    "ap before": results.loc["burned before", "avg precision"],
+    "top10 forest": results.loc["random forest", "top 10%"],
+    "top10 before": results.loc["burned before", "top 10%"],
+})
 
 #---Precision and recall at the threshold---
 # Only the forest, since the threshold was chosen for it.
@@ -202,8 +223,9 @@ test[["ID", "year", "month", "fire", "pred_rf", "pred_logit",
 
 results.to_csv(cfg.OUTPUT / "results_2025.csv")
 imp.to_csv(cfg.OUTPUT / "permutation_importance.csv")
+pd.DataFrame(loyo).to_csv(cfg.OUTPUT / "by_year.csv", index=False)
 
-print("\nsaved predictions, results and importances")
+print("\nsaved predictions, results, importances and by year")
 
 '''
 2025 is the held-out year: 18,126 rows, fire rate 1.42% against 11.08% in

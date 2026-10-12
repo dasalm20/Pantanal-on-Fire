@@ -1225,6 +1225,26 @@ missing temperature: 0</code></pre>
 </ul>
 <p><strong>AI-assisted decisions</strong></p>
 <p>Implementation: after some thoought and brainstorming, the author and AI model explored several options, both converged on: holding the model settings fixed so each variant changes only the data choice, and rebuilding burned before from the same cells in every variant so a stricter cut-off does not handicap the baseline.</p>
+</section>
+<section id="figures.py" class="level2">
+<h2 class="anchored" data-anchor-id="figures.py">12_figures.py</h2>
+<p><strong>Does:</strong> makes the maps and plots for the poster. Reads what the earlier scripts saved and computes nothing new.</p>
+<p><strong>Output:</strong> seven PNGs in <code>05-Output/figures/</code>.</p>
+<p><strong>Decisions</strong></p>
+<ul>
+<li>The palette lives in the config, not in this script, so any figure made later matches. Fire runs green to red, temperature uses an orange ramp, water a blue one, so a reader can tell what a map is showing without reading the legend.</li>
+<li>Every map carries a study-area outline. Without it the pale cells ran into the white page.</li>
+<li>Figure 3 shows both models’ capture rates rather than the difference between them. The difference hides the actual numbers, and two bars per year show the gap anyway.</li>
+<li>Years in figure 3 are ordered from quietest to busiest, not chronologically, so the pattern reads left to right.</li>
+<li>The 3D surface shows fire history rather than one month’s prediction. The prediction surface was noisy and the tall spikes were sliver cells rather than real risk. The history version shows the persistent hotspots the baseline relies on, so it makes the argument instead of decorating it.</li>
+<li>Figure 2 outlines the cells that actually burned, so hits and misses are readable off the map.</li>
+</ul>
+<p><strong>What the figures show</strong></p>
+<p>Figure 1 is the clearest statement of the problem: fire between 2019 and 2024 concentrates in the south and along the western edge, but 2025’s fires are scattered across the whole biome. A quiet year does not follow the usual pattern.</p>
+<p>Figure 2 shows the same thing from the model’s side. The high-risk band runs down the southwest, while the outlined cells that burned are spread across the biome, including the far north where the model predicted low risk.</p>
+<p>Figure 3 is the main result. The red baseline bar is taller in 2025, 2022 and 2023, the three quiet years, and the green model bar is taller in 2021, 2024, 2019 and 2020, the four active ones.</p>
+<p><strong>AI-assisted decisions</strong></p>
+<p>Implementation: the palette moved into the config; the study-area outline added after the grey cells were hard to separate from the page</p>
 <hr>
 </section>
 <section id="references" class="level2">

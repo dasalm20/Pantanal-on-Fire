@@ -18,11 +18,14 @@ The Brazilian Pantanal is the largest tropical wetland in the world. In 2020 abo
 
 This project builds and tests a model that predicts, for each 5 km cell in the Pantanal, whether fire will occur there in a given month of the dry season.
 
-**The question:** can conditions known before a month begins (how dry the preceding months were, how hot, how much of the cell was flooded, what the land is covered in, how accessible it is) rank Pantanal locations by their chance of burning in the month ahead?
+**The question:** can conditions known before a month begins (how dry the preceding months were, how hot, how much of the cell was flooded, what the land is covered in, how accessible it is) rank Pantanal locations by their chance of burning in the month ahead? The approach is a data-driven statistical susceptibility model, not a fire-spread simulation.
 
 **The data:** 6,584 grid cells, August to October, 2019 to 2025. Satellite fire detections, monthly rainfall and temperature, monthly flooding, annual land cover, and roads and waterways. All public, all collected.
 
-**The test:** a Random Forest learns from 2019 to 2024, and 2025 is held back entirely. The model is also compared against two simple alternatives: how often each cell has burned before, and whether it burned last month.
+**The test:** a Random Forest classifier learns from 2019 to 2024, with hyperparameters
+tuned by grid search inside the spatial cross-validation, and 2025 is held back entirely.
+The model is compared against three baselines: how often each cell has burned before,
+whether it burned last month, and a logistic regression on the same predictors.
 
 ## Progress
 
@@ -37,8 +40,8 @@ This project builds and tests a model that predicts, for each 5 km cell in the P
 | `06_access.py` | Distance to roads and rivers | |
 | `07_panel.py` | Join everything, build the lags | |
 | `08_folds.py` | Split the data for testing | |
-| `09_train.py` | Random Forest | |
-| `10_evaluate.py` | Metrics, baselines, uncertainty | |
+| `09_train.py` | Random Forest classifier, tuned by grid search | |
+| `10_evaluate.py` | Metrics, baselines, logistic regression, uncertainty | |
 | `11_experiments.py` | Sensitivity tests | |
 | `12_figures.py` | Maps and plots | |
 
@@ -50,6 +53,17 @@ Cutting a regular grid to the biome boundary leaves cells of very different size
 
 This supports applying a minimum cell size later in the pipeline rather than building it into the grid, and varying it from 0 to 100% of a full cell in the sensitivity analysis.
 
+## Feedback from the proposal
+
+The proposal was reviewed in October. Three changes followed:
+
+- Hyperparameter tuning by grid search was added to `09_train.py`, nested inside the
+  spatial cross-validation so that tuning never sees the held-out blocks.
+- Logistic regression was added as a third baseline, alongside historical fire frequency
+  and previous-month fire.
+- The problem statement and objectives were tightened to name the modelling approach
+  and the specific comparisons being made.
+  
 ## Planned workflow
 
 ```text

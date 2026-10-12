@@ -779,6 +779,9 @@ missing temperature: 0</code></pre>
 <li>One band is read at a time. Mosaicking all twelve bands at once holds about 4.7 GB in memory.</li>
 <li>The two tiles per year do not overlap: they share the same left and right edge, and the second tile’s top edge equals the first tile’s bottom edge exactly, so no pixel is counted twice.</li>
 </ul>
+<p><strong>AI-assisted decisions</strong></p>
+<p>Adopted after review: zonal counting with <code>rasterize</code> and <code>bincount</code> instead of looping over polygons; reading one band at a time for memory; checking tile bounds for overlap; testing the output against the seasonal cycle.</p>
+<p>The AI wrongly claimed the water pixels were a 0/1 flag, having read the Earth Engine display stretch as data values. The author’s original note was correct. Citations for the flood pulse and the drought were given from memory and are flagged for checking.</p>
 <p><strong>Checks</strong></p>
 <p>Mean water share peaks in April and May and bottoms out in October and November. Rainfall peaks between November and March, so inundation lags rainfall by two to three months. This is the known Pantanal flood pulse, where water from the northern highlands drains slowly south across a very flat basin (Hamilton et al., 1996). A peak in January would have meant the bands were read in the wrong order.</p>
 <p>Mean water share falls from 5.9% in 2018 to 2.4% in 2021 and stays low, matching the severe 2019 to 2021 drought in the basin (Marengo et al., 2021).</p>
@@ -796,6 +799,43 @@ missing temperature: 0</code></pre>
 </ul>
 <p>Citations to verify later:</p>
 <p>Hamilton, S.K., Sippel, S.J. and Melack, J.M. (1996). Inundation patterns in the Pantanal wetland of South America determined from passive microwave remote sensing. Archiv für Hydrobiologie, 137(1), 1-23. Marengo, J.A. et al.&nbsp;(2021). Extreme drought in the Brazilian Pantanal in 2019-2020: characterization, causes, and impacts. Frontiers in Water, 3, 639204.</p>
+</section>
+<section id="landcover.py" class="level2">
+<h2 class="anchored" data-anchor-id="landcover.py">05_landcover.py</h2>
+<p><strong>Does:</strong> reads the MapBiomas Collection 11 annual land cover rasters, which cover all of Brazil, takes only the window over the Pantanal, and works out what share of each cell was in each land cover class for every year from 2018 to 2025.</p>
+<p><strong>Output:</strong> <code>landcover_year.parquet</code>, 52,672 rows (6,584 cells x 8 years), with eight class shares that sum to 1 plus one combined column for the sensitivity test.</p>
+<p><strong>Decisions</strong></p>
+<ul>
+<li>The rasters cover all of Brazil at 22.6 billion pixels, so only the window over the study area is read, 390 million pixels. <code>rasterio.windows.from_bounds</code> converts the grid’s bounding box into a row and column range.</li>
+<li>The grid is reprojected to EPSG:4326 to match the rasters. Warping the raster instead would resample class codes, which are categorical and must not be interpolated.</li>
+<li>Class codes come from the published Collection 11 legend table. The rasters carry no embedded colour table, so the codes could not be confirmed against the legend colours from the file itself.</li>
+<li>40 classes exist nationally but 20 appear in the Pantanal, and seven of those cover 99.5% of it. Those seven get their own column and the rest are pooled into <code>other</code>, rather than carrying a dozen near-empty predictors into the model.</li>
+<li>Classes 6, 49, 50 and 77 are absent in 2018 but assigned to groups anyway, so a class appearing in a later year does not silently fall into <code>other</code>.</li>
+<li>Flooded Savanna (code 7) is new in Collection 11 and still marked beta. It is kept as its own class rather than folded into savanna, because flooded savanna burns differently from dry savanna and it covers 2.7% of the biome in 2018.</li>
+<li>Cell IDs are stored as uint16 rather than int32, which frees about 1.5 GB.</li>
+</ul>
+<p><strong>AI-assisted decisions</strong></p>
+<p>Adopted after review: reading only the window over the study area; reprojecting the grid rather than the raster; measuring all class shares before choosing a grouping; assigning absent codes to groups so later years do not fall into <code>other</code>; keeping Flooded Savanna separate; checking shares sum to 1; writing a combined column for the later sensitivity test.</p>
+<p>The AI wrongly stated code 77 was not in the legend. It is Herbaceous and Shrub Formation.</p>
+<p>The by-year table showed wetland, water, grassland and flooded savanna swinging against one another while their sum stays near 50%, meaning MapBiomas relabels the same ground by how wet the year was. Recorded as a limitation.</p>
+<p><strong>Checks</strong></p>
+<p>Class shares sum to exactly 1.0 in every cell and every year, so no code is counted twice or missed.</p>
+<p>Forest falls steadily from 14.75% to 13.79% and pasture rises steadily from 12.38% to 15.10%, which is real conversion.</p>
+<p>Wetland, water, grassland and flooded savanna behave differently. Wetland runs from 17.25% in 2018 to 2.14% in 2024, water from 15.77% to 3.94%, while grassland moves the opposite way, from 16.96% to 40.99%. They swing against one another because MapBiomas labels the same ground as wetland or water in a wet year and as grassland in a dry one. Summed, the four are stable, moving only from 52.6% to 47.4% across the whole period, which confirms it is one piece of ground being relabelled rather than land changing hands.</p>
+<p>This also explains the gap noted in <code>04_water.py</code>. The annual water class covers 16.1% of the biome in 2018 against a monthly mean water share of 5.9%, but the two track each other across years: both peak in 2018 and bottom out in 2021 and 2024. The annual class is a broader definition of the same water.</p>
+<p><strong>Limitations</strong></p>
+<ul>
+<li>Four of the eight class columns are partly a measure of how wet the year was rather than land cover, and they overlap with what <code>04_water.py</code> measures. They are taken from the previous year, so no information from the target month enters the model, but they should not be read as land use.</li>
+<li>A combined <code>flood_responsive</code> column is written to the output so the alternative grouping can be tested in <code>11_experiments.py</code> without re-reading 3.1 billion pixels. The eight separate classes remain the baseline.</li>
+<li>Flooded Savanna is a beta class in Collection 11 and may change in later collections.</li>
+</ul>
+<p><strong>Documentation used</strong></p>
+<ul>
+<li><code>rasterio.windows.from_bounds</code> — rasterio.readthedocs.io/en/stable/api/rasterio.windows.html</li>
+<li><code>rasterio.features.rasterize</code> — rasterio.readthedocs.io/en/stable/api/rasterio.features.html</li>
+<li><code>numpy.bincount</code> — numpy.org/doc/stable/reference/generated/numpy.bincount.html</li>
+<li>MapBiomas Collection 11 legend codes — brasil.mapbiomas.org/codigos-de-legenda/</li>
+</ul>
 <hr>
 </section>
 <section id="references" class="level2">

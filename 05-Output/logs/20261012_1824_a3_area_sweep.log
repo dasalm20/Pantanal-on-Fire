@@ -1,0 +1,26 @@
+features: 21 | settings: {'class_weight': 'balanced', 'max_features': 0.3, 'min_samples_leaf': 1}
+min area 0% done | fold rows 23,688 to 23,706 | fold ap 0.3787 to 0.4690
+min area 25% done | fold rows 22,104 to 22,608 | fold ap 0.3830 to 0.4712
+min area 50% done | fold rows 21,366 to 22,140 | fold ap 0.3812 to 0.4746
+min area 75% done | fold rows 20,700 to 21,456 | fold ap 0.3829 to 0.4785
+min area 100% done | fold rows 19,152 to 20,178 | fold ap 0.3763 to 0.4850
+
+sensitivity results
+               cells   cv ap  2025 ap  ap before  2025 top10  top10 before
+variant                                                                   
+min area 0%     6584  0.4411   0.1053     0.0706      0.3946        0.4301
+min area 25%    6217  0.4469   0.1095     0.0699      0.3854        0.4189
+min area 50%    6042  0.4498   0.1100     0.0698      0.3977        0.4188
+min area 75%    5845  0.4523   0.1059     0.0684      0.3923        0.4119
+min area 100%   5484  0.4542   0.0830     0.0524      0.3723        0.3838
+
+forest minus burned before on 2025
+               ap gap  top10 gap
+variant                         
+min area 0%    0.0347    -0.0355
+min area 25%   0.0396    -0.0335
+min area 50%   0.0402    -0.0211
+min area 75%   0.0375    -0.0196
+min area 100%  0.0306    -0.0115
+
+saved sensitivity_area.csv

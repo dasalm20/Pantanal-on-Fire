@@ -154,7 +154,7 @@ ax.set_xticks(x)
 ax.set_xticklabels(ticks)
 ax.set_xlabel("year, ordered from quietest to busiest, with the share of cell-months that burned")
 ax.set_ylabel("share of that year's fires\ncaught in the top 10% of cells")
-ax.set_title("The model only beats the baseline in active years")
+ax.set_title("On the top 10% shortlist, the model only beats the baseline in active years")
 ax.legend(title="", frameon=False)
 fig.tight_layout()
 fig.savefig(FIG / "fig3_finding.png", dpi=300)
@@ -182,7 +182,8 @@ fig.savefig(FIG / "fig4_baselines.png", dpi=300)
 plt.close(fig)
 
 #---Figure 5: does any data choice change the answer?---
-# Every bar sits left of zero, so burned before wins under all ten setups.
+# Nine of ten bars sit left of zero and the tenth is barely right of it, so
+# no data choice separates the two on the top 10%.
 s = sens.sort_values("top10 gap")
 
 fig, ax = plt.subplots(figsize=(6, 4))
@@ -190,7 +191,7 @@ fig, ax = plt.subplots(figsize=(6, 4))
 ax.barh(s.index, s["top10 gap"], color=C["accent"])   # geom_col() + coord_flip()
 ax.axvline(0, color="black", linewidth=0.8)           # geom_vline
 ax.set_xlabel("forest minus burned before, top 10% capture on 2025")
-ax.set_title("No data choice changes the result")
+ax.set_title("The top 10% tie holds under every data choice")
 fig.tight_layout()
 fig.savefig(FIG / "fig5_sensitivity.png", dpi=300)
 plt.close(fig)

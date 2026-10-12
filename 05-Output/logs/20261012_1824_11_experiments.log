@@ -1,0 +1,53 @@
+features: 21 | settings: {'class_weight': 'balanced', 'max_features': 0.3, 'min_samples_leaf': 1}
+baseline done | fold ap 0.4501 to 0.4999
+min area 75% done | fold ap 0.4469 to 0.5027
+min area 100% done | fold ap 0.4430 to 0.5071
+blocks 25 km done | fold ap 0.4576 to 0.5413
+blocks 75 km done | fold ap 0.3631 to 0.4685
+1 month lags only done | fold ap 0.4186 to 0.4580
+land cover grouped done | fold ap 0.4430 to 0.4948
+main roads only done | fold ap 0.4512 to 0.5023
+rivers only done | fold ap 0.4500 to 0.5025
+no cell area done | fold ap 0.4533 to 0.4965
+
+sensitivity results
+                    cells   cv ap  2025 ap  ap before  2025 top10  top10 before
+variant                                                                        
+baseline             6042  0.4658   0.1100     0.0698      0.3977        0.4188
+min area 75%         5845  0.4664   0.1059     0.0684      0.3923        0.4119
+min area 100%        5484  0.4704   0.0830     0.0524      0.3723        0.3838
+blocks 25 km         6042  0.5028   0.1100     0.0698      0.3977        0.4188
+blocks 75 km         6042  0.4161   0.1100     0.0698      0.3977        0.4188
+1 month lags only    6042  0.4315   0.1093     0.0698      0.4211        0.4188
+land cover grouped   6042  0.4632   0.1057     0.0698      0.3493        0.4188
+main roads only      6042  0.4678   0.1068     0.0698      0.3965        0.4188
+rivers only          6042  0.4653   0.1091     0.0698      0.4084        0.4188
+no cell area         6042  0.4657   0.1139     0.0698      0.3930        0.4188
+
+forest minus burned before on 2025
+                    ap gap  top10 gap
+variant                              
+baseline            0.0402    -0.0211
+min area 75%        0.0375    -0.0196
+min area 100%       0.0306    -0.0115
+blocks 25 km        0.0402    -0.0211
+blocks 75 km        0.0402    -0.0211
+1 month lags only   0.0395     0.0023
+land cover grouped  0.0359    -0.0695
+main roads only     0.0370    -0.0223
+rivers only         0.0393    -0.0104
+no cell area        0.0441    -0.0258
+
+saved sensitivity.csv
+
+not run here:
+  cell size 10 km      needs 01_grid.py through 07_panel.py run again on a
+                       10 km grid
+  fire detections      02_fire.py already drops VIIRS types 2 and 3; using
+                       only the more certain detections needs that rebuilt
+
+run separately:
+  min area 0% and 25%  07_panel.py already applied the 50% cut-off, so the
+                       looser cut-offs run on the unfiltered panel in
+                       additional_testing/a3_area_sweep.py
+

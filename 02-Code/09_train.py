@@ -137,31 +137,3 @@ imp = pd.Series(model.feature_importances_, index=FEATURES).sort_values(ascendin
 print("\nfeature importance, built-in")
 print(imp.round(4).to_string())
 
-'''
-training rows: 108,756 | fire rate 11.08% | 5 folds
-
-best average precision: 0.4380
-best settings: class_weight balanced, max_features 0.5, min_samples_leaf 5
-
-Check 1: 0.4380 against a fire rate of 0.1108, so 4.0x better than a
-random ranking.
-
-Check 2, per fold: 0.4785, 0.4341, 0.4406, 0.3910, 0.4458. Tight, so the
-model works across the Pantanal rather than in one part of it.
-
-Check 3, feature importance:
-  fire_prev 0.121, tmax_1m 0.116, rain_1m 0.101, rain_wet 0.099,
-  tmax_3m 0.094, rain_3m 0.092. Those six carry about 62%.
-  Land cover follows at 0.025 to 0.037, water at 0.013 to 0.020.
-  area_km2 is last at 0.0041.
-
-Tuning: the first grid picked edge values on two parameters, so it was
-widened once. min_samples_leaf then settled in the middle, max_features
-stayed at the top, but the whole gain was 0.4335 to 0.4380, about 1%.
-The surface is flat, so the search stops here.
-
-No threshold is chosen here. The model returns a probability per cell and
-average precision scores the ranking across all thresholds at once. A
-cut-off is only needed for precision and recall, and it is chosen in
-10_evaluate.py on the training years, never on 2025.
-'''

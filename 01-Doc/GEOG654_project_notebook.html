@@ -836,6 +836,32 @@ missing temperature: 0</code></pre>
 <li><code>numpy.bincount</code> — numpy.org/doc/stable/reference/generated/numpy.bincount.html</li>
 <li>MapBiomas Collection 11 legend codes — brasil.mapbiomas.org/codigos-de-legenda/</li>
 </ul>
+</section>
+<section id="access.py" class="level2">
+<h2 class="anchored" data-anchor-id="access.py">06_access.py</h2>
+<p><strong>Does:</strong> measures how far each cell is from the nearest road and the nearest mapped waterway, from the 2020 OpenStreetMap snapshot.</p>
+<p><strong>Output:</strong> <code>access.parquet</code>, 6,584 rows, four distance columns in km.</p>
+<p><strong>Decisions</strong></p>
+<ul>
+<li>Features are read from a padded box, because the nearest road to an edge cell can sit outside the biome.</li>
+<li>Footpaths, cycleways and steps are dropped, leaving 106,650 drivable lines. Tracks are kept: ranch tracks are the main way across most of the Pantanal.</li>
+<li>Residential streets are over half of all roads and sit in towns, so a main-network version (14,826 lines) is built for the sensitivity test.</li>
+<li>All waterways are the baseline, with a rivers-only version (1,837 lines) for the sensitivity test, since OSM stream mapping is patchy and rivers are consistent.</li>
+<li>Distance is from the cell polygon, not its representative point, so a cell a road crosses gets zero.</li>
+<li><code>sjoin_nearest</code> is used instead of testing every cell against every line. A tie returns two rows for one cell, so the smallest is taken.</li>
+</ul>
+<p><strong>Checks</strong></p>
+<p>All four distances are under the 158 km pad, so no cell could have a nearer line outside the box.</p>
+<p>The box was run at 0.5 and 1.5 degrees. The wider box added 28,000 roads and 3,800 waterways and returned identical distances to two decimals, so the padding does not affect the result.</p>
+<p>Median distance to a drivable road is 2.2 km and a quarter of cells are at zero. Median to a main road is 10.6 km, maximum 98.8 km in the northern Pantanal.</p>
+<p><strong>Limitations</strong></p>
+<ul>
+<li>The Centro-Oeste extract stops at the Brazilian border, so roads and rivers in Bolivia and Paraguay are missing. Cells on the western and southern edges show larger distances than the truth. A wider box cannot fix this.</li>
+<li>One 2020 snapshot is used across 2019 to 2025, so these are static predictors.</li>
+</ul>
+<p><strong>AI-assisted decisions</strong></p>
+<p>Adopted after review: padding the box; dropping pedestrian-only types while keeping tracks; measuring from the polygon rather than the point; building the main-roads and rivers-only versions now for the later test; checking every distance against the pad.</p>
+<p>The first run used a 0.5 degree pad and the AI flagged that three of the four maximum distances exceeded it, so they could not be trusted. Widening to 1.5 degrees returned identical numbers, so the original pad had been fine, but it is now shown rather than assumed.</p>
 <hr>
 </section>
 <section id="references" class="level2">

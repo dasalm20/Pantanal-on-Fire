@@ -1083,6 +1083,148 @@ missing temperature: 0</code></pre>
 <p><strong>AI-assisted decisions</strong></p>
 <p>Implementation: scaling the predictors before the logistic regression.</p>
 <p>Checking: the first version compared models using separate confidence ranges, which cannot settle whether one beats another when both are scored on the same rows. A paired bootstrap was added. It showed the average precision gap on 2025 was not real, which at first looked like it rescued the result, so the same test was then run on top 10% capture, where the gap is real. The leave-one-year-out loop was then extended to report both measures, so the quiet years and the active years are compared the same way rather than on whichever metric was convenient.</p>
+</section>
+<section id="experiments.py" class="level2">
+<h2 class="anchored" data-anchor-id="experiments.py">11_experiments.py</h2>
+<p><strong>Does:</strong> runs the whole comparison again under ten different data choices, to see whether the result from <code>10_evaluate.py</code> holds or depends on how the pipeline was set up.</p>
+<p><strong>Output:</strong> <code>sensitivity.csv</code>.</p>
+<p><strong>Decisions</strong></p>
+<ul>
+<li>Each variant changes one thing from the baseline and nothing else.</li>
+<li>The model settings stay fixed at the ones chosen in <code>09_train.py</code>, so only the data choice varies. Retuning each variant would change two things at once.</li>
+<li>Burned before is rebuilt from the same cells in every variant, so a stricter area cut-off does not handicap the baseline.</li>
+<li>No variant is adopted. The baseline stays the baseline. The point is to see how far the answer moves, not to find a better setup.</li>
+</ul>
+<p><strong>Results</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>variant</th>
+<th>cells</th>
+<th>cv ap</th>
+<th>2025 ap</th>
+<th>ap before</th>
+<th>2025 top10</th>
+<th>top10 before</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>baseline</td>
+<td>6042</td>
+<td>0.4380</td>
+<td>0.0529</td>
+<td>0.0607</td>
+<td>0.2984</td>
+<td>0.4070</td>
+</tr>
+<tr class="even">
+<td>min area 75%</td>
+<td>5845</td>
+<td>0.4373</td>
+<td>0.0511</td>
+<td>0.0596</td>
+<td>0.3080</td>
+<td>0.3840</td>
+</tr>
+<tr class="odd">
+<td>min area 100%</td>
+<td>5484</td>
+<td>0.4404</td>
+<td>0.0506</td>
+<td>0.0577</td>
+<td>0.2991</td>
+<td>0.3846</td>
+</tr>
+<tr class="even">
+<td>blocks 25 km</td>
+<td>6042</td>
+<td>0.4685</td>
+<td>0.0529</td>
+<td>0.0607</td>
+<td>0.2984</td>
+<td>0.4070</td>
+</tr>
+<tr class="odd">
+<td>blocks 75 km</td>
+<td>6042</td>
+<td>0.4117</td>
+<td>0.0529</td>
+<td>0.0607</td>
+<td>0.2984</td>
+<td>0.4070</td>
+</tr>
+<tr class="even">
+<td>1 month lags only</td>
+<td>6042</td>
+<td>0.4007</td>
+<td>0.0576</td>
+<td>0.0607</td>
+<td>0.3140</td>
+<td>0.4070</td>
+</tr>
+<tr class="odd">
+<td>land cover grouped</td>
+<td>6042</td>
+<td>0.4434</td>
+<td>0.0545</td>
+<td>0.0607</td>
+<td>0.3140</td>
+<td>0.4070</td>
+</tr>
+<tr class="even">
+<td>main roads only</td>
+<td>6042</td>
+<td>0.4395</td>
+<td>0.0482</td>
+<td>0.0607</td>
+<td>0.2907</td>
+<td>0.4070</td>
+</tr>
+<tr class="odd">
+<td>rivers only</td>
+<td>6042</td>
+<td>0.4384</td>
+<td>0.0542</td>
+<td>0.0607</td>
+<td>0.3101</td>
+<td>0.4070</td>
+</tr>
+<tr class="even">
+<td>no cell area</td>
+<td>6042</td>
+<td>0.4387</td>
+<td>0.0541</td>
+<td>0.0607</td>
+<td>0.3178</td>
+<td>0.4070</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What it shows</strong></p>
+<p>Every variant keeps the same sign. The forest minus burned before gap on 2025 top 10% capture runs from -0.076 to -0.116 across all ten. No data choice flips the result, so the conclusion does not rest on how the pipeline was built.</p>
+<p>Block size changes the cross-validation score and nothing else: 0.4685 at 25 km, 0.4380 at 50 km, 0.4117 at 75 km. Smaller blocks put training and test cells closer together, so the score comes out more optimistic. Block size cannot affect the 2025 result, since the final model trains on all training years either way. This is the clearest demonstration in the project of why spatial blocks are used at all.</p>
+<p>The minimum cell area matters less than expected. Cross-validation runs 0.4373 to 0.4404 across 50%, 75% and 100% of a full cell, and the 2025 gap narrows without flipping. The exposure problem measured in <code>01_grid.py</code> and <code>02_fire.py</code> was real and worth handling, but the threshold chosen for it does not drive the answer.</p>
+<p>Four variants score slightly better than the baseline on 2025: grouped land cover, no cell area, rivers only and one month lags. None closes the gap, and none is adopted, since choosing one after seeing 2025 would mean picking the answer.</p>
+<p>Dropping the three month lags costs the most in cross-validation, 0.4380 to 0.4007, while slightly improving 2025. Main roads only is the worst variant on 2025, so keeping every drivable road was the better choice.</p>
+<p><strong>Not run here</strong></p>
+<p>Three tests from the proposal need the pipeline rebuilt from raw data rather than a different slice of the panel:</p>
+<ul>
+<li>A looser area cut-off, 0% and 25%. <code>07_panel.py</code> already applied the 50% cut-off, so only a stricter one can be tested from <code>panel.parquet</code>.</li>
+<li>A 10 km grid. Needs <code>01_grid.py</code> through <code>07_panel.py</code> run again.</li>
+<li>Restricting the fire detections. <code>02_fire.py</code> already drops VIIRS types 2 and 3, and using only the more certain detections needs that rebuilt.</li>
+</ul>
+<p><strong>AI-assisted decisions</strong></p>
+<p>Implementation: after some thoought and brainstorming, the author and AI model explored several options, both converged on: holding the model settings fixed so each variant changes only the data choice, and rebuilding burned before from the same cells in every variant so a stricter cut-off does not handicap the baseline.</p>
 <hr>
 </section>
 <section id="references" class="level2">

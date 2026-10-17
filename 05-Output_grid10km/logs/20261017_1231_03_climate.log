@@ -1,0 +1,41 @@
+chirps chirps-v3.0.2018.01.tif
+  crs:    EPSG:4326
+  pixel:  (0.05000000074505806, 0.05000000074505806)
+  nodata: None
+  bands:  1 ('float32',)
+tmax CHIRTS-ERA5.monthly_Tmax.2018.01.tif
+  crs:    EPSG:4326
+  pixel:  (0.05000000074505806, 0.05000000074505806)
+  nodata: None
+  bands:  1 ('float32',)
+sampling points: 1741
+precip: read 96 files
+tmax: read 96 files
+impossible rainfall values: 0
+impossible temperature values: 0
+rows: 167136 expected: 167136
+missing rainfall: 0
+missing temperature: 0
+              precip           tmax
+count  167136.000000  167136.000000
+mean       89.289055      33.117298
+std        76.785393       2.173724
+min         0.000000      22.843519
+25%        22.059051      32.035036
+50%        73.744675      33.339336
+75%       138.998032      34.492276
+max       517.803345      38.347561
+           precip       tmax
+month                       
+1      177.199997  34.299999
+2      158.899994  33.599998
+3      130.699997  33.500000
+4       93.400002  32.900002
+5       42.599998  31.400000
+6       22.299999  29.799999
+7        3.800000  30.799999
+8       26.900000  32.099998
+9       36.099998  34.799999
+10      82.900002  35.000000
+11     127.900002  35.000000
+12     168.800003  34.299999

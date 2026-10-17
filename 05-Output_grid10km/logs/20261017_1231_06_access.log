@@ -1,0 +1,71 @@
+study area bounds: [np.float64(-59.14), np.float64(-22.16), np.float64(-54.79), np.float64(-15.65)]
+box read:          [np.float64(-60.64), np.float64(-23.66), np.float64(-53.29), np.float64(-14.15)]
+
+roads read: 110,530
+crs: EPSG:4326
+columns: ['osm_id', 'code', 'fclass', 'name', 'ref', 'oneway', 'maxspeed', 'layer', 'bridge', 'tunnel', 'geometry']
+
+road types present
+fclass
+residential       60171
+unclassified      12314
+service            6149
+track              6057
+tertiary           5363
+track_grade5       4547
+primary            4001
+secondary          3093
+footway            2553
+living_street      1314
+primary_link        972
+path                817
+track_grade2        530
+trunk               504
+track_grade3        496
+secondary_link      319
+pedestrian          284
+trunk_link          270
+tertiary_link       215
+track_grade4        206
+cycleway            158
+steps                68
+motorway_link        48
+motorway             41
+unknown              33
+track_grade1          7
+
+waterways read: 7,569
+
+waterway types present
+fclass
+stream    5440
+river     1837
+canal      154
+drain      138
+drivable roads: 106,650
+main roads:     14,826
+all waterways:  7,569
+rivers only:    1,837
+dist_road done
+dist_road_main done
+dist_water done
+dist_river done
+
+rows: 1,741
+
+distances in km
+       dist_road  dist_road_main  dist_water  dist_river
+count    1741.00         1741.00     1741.00     1741.00
+mean        3.46           13.64        9.85       11.56
+std         5.91           17.30       12.02       13.64
+min         0.00            0.00        0.00        0.00
+25%         0.00            0.32        0.00        0.00
+50%         0.00            7.39        5.39        6.24
+75%         4.87           19.54       15.28       18.62
+max        33.98           94.52       62.32       64.15
+
+pad: 158 km
+dist_road        max  33.98 km  ok
+dist_road_main   max  94.52 km  ok
+dist_water       max  62.32 km  ok
+dist_river       max  64.15 km  ok

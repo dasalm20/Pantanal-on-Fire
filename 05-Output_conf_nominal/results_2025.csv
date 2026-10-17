@@ -1,0 +1,5 @@
+model,avg precision,roc auc,top 1%,top 5%,top 10%
+random forest,0.1023,0.7223,0.1365,0.262,0.4022
+logistic,0.0526,0.6258,0.1033,0.1882,0.2472
+burned before,0.0622,0.7099,0.1153,0.3,0.4055
+burned last month,0.0315,0.5557,0.1011,0.159,0.2037

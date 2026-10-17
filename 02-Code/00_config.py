@@ -2,17 +2,33 @@
 # This script is used to set up the configuration for the project.
 # It defines various parameters and settings that will be used throughout the codebase.
 # Import libraries
+import os  # reads the run settings from the environment
 from pathlib import Path
 #----------------------------------------------------------------------------------------
 
 # Repo root 
 MAIN = Path(__file__).resolve().parents[1]
 
+#---Run settings---
+# Read from the environment, so a sensitivity run changes a setting without
+# editing this file. Nothing set means the baseline 5 km run.
+# R equivalent: Sys.getenv()
+RUN_TAG    = os.environ.get("RUN_TAG", "")         # names this run's folders
+GRID_M     = int(os.environ.get("GRID_M", 5000))   # cell size in metres
+CONFIDENCE = os.environ.get("CONFIDENCE", "all")   # "all" or "nominal"
+
 #Define paths for raw data, code, processed data, and output
-RAW       = MAIN / "03-Data"
+# A run tag gives the run its own folders, so it cannot overwrite the baseline.
+_tag = f"_{RUN_TAG}" if RUN_TAG else ""
+
+RAW       = MAIN / "03-Data"            # raw data is shared by every run
 CODE      = MAIN / "02-Code"
-PROCESSED = MAIN / "04-Processed"
-OUTPUT    = MAIN / "05-Output"
+PROCESSED = MAIN / f"04-Processed{_tag}"
+OUTPUT    = MAIN / f"05-Output{_tag}"
+
+# Made here, so no script has to check the folder exists before writing.
+for _d in (PROCESSED, OUTPUT, OUTPUT / "figures"):
+    _d.mkdir(parents=True, exist_ok=True)
 
 # Define the Coordinate Reference System (CRS) to be used for spatial data
 CRS = "EPSG:31981"   # SIRGAS 2000 / UTM 21S
@@ -38,8 +54,7 @@ OUTPUTS = {
 }
 
 # ---- Model settings ----
-GRID_M        = 5000
-MIN_AREA_KM2  = 12.5
+# GRID_M is set above, with the run settings.
 TRAIN_YEARS   = list(range(2019, 2025))
 VAL_YEAR      = 2025
 TARGET_MONTHS = [8, 9, 10]

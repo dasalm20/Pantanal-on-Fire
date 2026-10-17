@@ -1,0 +1,27 @@
+<ArrowStringArray>
+['Amazônia', 'Caatinga', 'Cerrado', 'Mata Atlântica', 'Pampa', 'Pantanal']
+Length: 6, dtype: str
+6
+1 EPSG:4674
+EPSG:4674
+1 EPSG:31981
+Number of grid cells: 1741
+Total area (km²): 150879.7276796208
+count    1741.000000
+mean       86.662681
+std        28.000628
+min         0.018708
+25%        97.653983
+50%       100.000000
+75%       100.000000
+max       100.000000
+Name: area_km2, dtype: float64
+below   4% of a cell ( 4.00 km2):    46 cells,      55.9 km2
+below  25% of a cell (25.00 km2):   142 cells,    1356.5 km2
+below  50% of a cell (50.00 km2):   229 cells,    4659.3 km2
+below  75% of a cell (75.00 km2):   323 cells,   10459.1 km2
+Cells after clipping: 1741
+Cells below 1 km²: 26
+Total clipped area: 150879.7276796208
+Sample points inside own cell: True
+CRS of saved file: EPSG:31981

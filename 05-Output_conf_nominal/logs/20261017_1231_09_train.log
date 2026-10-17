@@ -1,0 +1,36 @@
+training rows: 108,756
+fire rate: 11.19%
+folds: 5
+
+fitting 9 settings x 5 folds, this takes a while
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+
+best average precision: 0.4602
+best settings: {'class_weight': 'balanced', 'max_features': 'sqrt', 'min_samples_leaf': 1}
+saved model.joblib and cv_results.csv
+
+0.4602 vs fire rate 0.1119 = 4.1x random
+per fold: [np.float64(0.4973), np.float64(0.4463), np.float64(0.449), np.float64(0.4574), np.float64(0.451)]
+
+feature importance, built-in
+tmax_1m            0.0869
+rain_1m            0.0822
+tmax_3m            0.0802
+rain_wet           0.0786
+rain_3m            0.0779
+fire_prev          0.0736
+pasture            0.0502
+wetland            0.0484
+dist_water         0.0460
+grassland          0.0456
+forest             0.0454
+flooded_savanna    0.0448
+savanna            0.0425
+lc_water           0.0352
+dist_road          0.0352
+water_wet          0.0306
+water_3m           0.0280
+water_1m           0.0242
+other              0.0222
+month              0.0156
+area_km2           0.0066

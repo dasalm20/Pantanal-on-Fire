@@ -1,0 +1,28 @@
+block_25km    319 blocks | cells per block: min 1, median 25, max 25
+block_50km     98 blocks | cells per block: min 2, median 87, max 100
+block_75km     47 blocks | cells per block: min 1, median 146, max 225
+
+rows: 6,042
+columns: ['ID', 'fold', 'block_25km', 'block_50km', 'block_75km']
+
+cells: 6,042 | rows: 6,042
+every cell once: True
+
+folds on block_50km
+       rows   fires   rate  blocks  cells
+fold                                     
+0     21762  2314.0  10.63      19   1209
+1     21762  2483.0  11.41      20   1209
+2     21744  2229.0  10.25      18   1208
+3     21744  2452.0  11.28      18   1208
+4     21744  2688.0  12.36      18   1208
+
+leave one year out
+       rows   fires   rate
+year                      
+2019  18126  3094.0  17.07
+2020  18126  3888.0  21.45
+2021  18126  2062.0  11.38
+2022  18126   368.0   2.03
+2023  18126   668.0   3.69
+2024  18126  2086.0  11.51

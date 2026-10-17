@@ -1,0 +1,67 @@
+train rows: 27,216 | fire rate 21.34%
+2025 rows:  4,536 | fire rate 4.06%
+fold 0 done
+fold 1 done
+fold 2 done
+fold 3 done
+fold 4 done
+
+threshold: 0.52
+
+2025 results, fire rate 0.0406
+                   avg precision  roc auc  top 1%  top 5%  top 10%
+model                                                             
+random forest             0.2052   0.7393  0.1033  0.2663   0.3641
+logistic                  0.1221   0.6600  0.0870  0.2337   0.3098
+burned before             0.1704   0.7147  0.0989  0.3003   0.4149
+burned last month         0.0786   0.5863  0.0552  0.2117   0.2524
+
+95% range on average precision
+  random forest      0.2052  [0.1508, 0.2685]
+  logistic           0.1221  [0.0905, 0.1711]
+  burned before      0.1704  [0.1283, 0.2242]
+  burned last month  0.0786  [0.0595, 0.1057]
+
+avg precision, forest minus burned before: +0.0348  [-0.0228, +0.0847]
+  difference is clear: False
+
+top 10%, forest minus burned before: -0.0508  [-0.1187, +0.0200]
+  difference is clear: False
+
+leave one year out
+  2019  rate 0.352 | AP 0.5927 vs 0.4841 | top10 0.1979 vs 0.1860
+  2020  rate 0.366 | AP 0.6274 vs 0.4945 | top10 0.2033 vs 0.1794
+  2021  rate 0.215 | AP 0.4498 vs 0.3779 | top10 0.2756 vs 0.2354
+  2022  rate 0.061 | AP 0.1997 vs 0.1660 | top10 0.3430 vs 0.3682
+  2023  rate 0.090 | AP 0.2523 vs 0.2138 | top10 0.3440 vs 0.3158
+  2024  rate 0.197 | AP 0.4518 vs 0.3402 | top10 0.2875 vs 0.2345
+
+at threshold 0.52
+  precision: 0.1827
+  recall:    0.3207
+  flagged:   323 of 4,536 cells
+
+permutation importance on 2025
+fire_prev          0.0989
+tmax_3m            0.0531
+grassland          0.0501
+tmax_1m            0.0320
+rain_1m            0.0267
+dist_water         0.0219
+dist_road          0.0205
+pasture            0.0200
+savanna            0.0168
+forest             0.0164
+other              0.0112
+lc_water           0.0104
+water_wet          0.0090
+water_1m           0.0084
+water_3m           0.0076
+month              0.0047
+rain_wet           0.0003
+area_km2          -0.0013
+flooded_savanna   -0.0017
+wetland           -0.0023
+rain_3m           -0.0166
+
+saved predictions, results, importances and by year

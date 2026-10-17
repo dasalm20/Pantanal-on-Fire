@@ -230,5 +230,3 @@ axin.text(0.04, 0.04, "Location in Brazil", transform=axin.transAxes,
 #---Save---
 # Save before show: plt.show() closes the figure.
 plt.savefig(cfg.OUTPUTS["figures"] / "study_area.png", dpi=300, bbox_inches="tight")
-
-plt.show()

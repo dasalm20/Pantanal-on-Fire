@@ -1,0 +1,70 @@
+Index(['latitude', 'longitude', 'brightness', 'scan', 'track', 'acq_date',
+       'acq_time', 'satellite', 'instrument', 'confidence', 'version',
+       'bright_t31', 'frp', 'daynight', 'type'],
+      dtype='str')
+type
+0    9857094
+2     105937
+3      17358
+Name: count, dtype: int64
+confidence
+n    8503921
+l     908404
+h     568064
+Name: count, dtype: int64
+instrument
+VIIRS    9980389
+Name: count, dtype: int64
+satellite
+N20    9980389
+Name: count, dtype: int64
+type filter: 9,980,389 -> 9,857,094 detections
+confidence filter: 9,857,094 -> 8,953,693 detections
+bounding box: 8,953,693 -> 607,604 detections
+detections inside the Pantanal: 502,675
+confidence
+n    456949
+h     45726
+Name: count, dtype: int64
+rows: 553056 expected: 553056
+cell-months with fire: 24942
+prevalence: 0.045098507203610486
+area_bin
+(0.0, 1.0]      0.004095
+(1.0, 5.0]      0.016667
+(5.0, 12.5]     0.031984
+(12.5, 20.0]    0.039550
+(20.0, 25.0]    0.047681
+Name: fire_binary, dtype: float64
+area_bin
+(0.0, 1.0]      0.017512
+(1.0, 5.0]      0.024866
+(5.0, 12.5]     0.032967
+(12.5, 20.0]    0.030817
+(20.0, 25.0]    0.040004
+Name: rate_per_km2, dtype: float64
+/Users/nikos/Documents/Projects/Pantanal-on-Fire/02-Code/02_fire.py:183: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+month
+1     0.023911
+2     0.015796
+3     0.018551
+4     0.016707
+5     0.019289
+6     0.029357
+7     0.046021
+8     0.083970
+9     0.101415
+10    0.095470
+11    0.064442
+12    0.026254
+Name: fire_binary, dtype: float64
+year
+2019    0.073929
+2020    0.093788
+2021    0.044641
+2022    0.019314
+2023    0.027617
+2024    0.048058
+2025    0.008341
+Name: fire_binary, dtype: float64

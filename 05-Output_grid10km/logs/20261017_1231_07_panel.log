@@ -1,0 +1,55 @@
+grid          1,741 rows | ['area_km2', 'rep_x', 'rep_y', 'ID', 'geometry']
+fire        146,244 rows | ['ID', 'year', 'month', 'fire_count', 'fire_binary']
+climate     167,136 rows | ['ID', 'year', 'month', 'precip', 'tmax']
+water       167,136 rows | ['ID', 'year', 'month', 'water_pct']
+landcover    13,928 rows | ['ID', 'year', 'forest', 'savanna', 'flooded_savanna', 'wetland', 'grassland', 'pasture', 'water', 'other']
+access        1,741 rows | ['ID', 'dist_road', 'dist_road_main', 'dist_water', 'dist_river']
+
+monthly table: 167,136 rows, 2018 to 2025
+target rows before joins: 36,561
+
+minimum cell area: 50.00 km2
+rows dropped: 4,809 of 36,561 (13.2%)
+cells kept: 1,512 of 1,741
+
+rows: 31,752
+columns: 27
+
+columns with missing values
+none
+
+one row, cell 2 September 2020
+fire           0.000000
+fire_prev      0.000000
+rain_1m      114.160690
+rain_3m      187.627150
+rain_wet     764.233521
+tmax_1m       29.505592
+water_1m       0.001511
+water_wet      0.004009
+
+mean rain_1m by target month, mm
+month
+8      3.300000
+9     24.799999
+10    29.500000
+
+fire rate by year, %
+year
+2019    35.21
+2020    36.55
+2021    21.52
+2022     6.11
+2023     8.97
+2024    19.71
+2025     4.06
+
+August 2020 rain across cells, mm
+count    1741.0
+mean       14.0
+std        19.4
+min         0.0
+25%         3.1
+50%         7.8
+75%        18.4
+max       122.9

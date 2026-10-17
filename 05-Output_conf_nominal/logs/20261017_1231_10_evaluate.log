@@ -1,0 +1,69 @@
+train rows: 108,756 | fire rate 11.19%
+2025 rows:  18,126 | fire rate 1.50%
+fold 0 done
+fold 1 done
+fold 2 done
+fold 3 done
+fold 4 done
+
+threshold: 0.36
+
+2025 results, fire rate 0.0150
+                   avg precision  roc auc  top 1%  top 5%  top 10%
+model                                                             
+random forest             0.1023   0.7223  0.1365  0.2620   0.4022
+logistic                  0.0526   0.6258  0.1033  0.1882   0.2472
+burned before             0.0622   0.7099  0.1153  0.3000   0.4055
+burned last month         0.0315   0.5557  0.1011  0.1590   0.2037
+
+95% range on average precision
+  random forest      0.1023  [0.0718, 0.1496]
+  logistic           0.0526  [0.0365, 0.0799]
+  burned before      0.0622  [0.0478, 0.0836]
+  burned last month  0.0315  [0.0217, 0.0435]
+
+avg precision, forest minus burned before: +0.0401  [+0.0111, +0.0769]
+  difference is clear: True
+
+top 10%, forest minus burned before: -0.0033  [-0.0604, +0.0616]
+  difference is clear: False
+
+leave one year out
+  2019  rate 0.171 | AP 0.3337 vs 0.2601 | top10 0.2389 vs 0.1989
+  2020  rate 0.214 | AP 0.4187 vs 0.3001 | top10 0.2408 vs 0.1816
+  2021  rate 0.114 | AP 0.2697 vs 0.1993 | top10 0.2867 vs 0.2332
+  2022  rate 0.020 | AP 0.0731 vs 0.0586 | top10 0.3315 vs 0.3135
+  2023  rate 0.037 | AP 0.0997 vs 0.1043 | top10 0.3281 vs 0.3402
+  2024  rate 0.115 | AP 0.2585 vs 0.2123 | top10 0.2796 vs 0.2362
+
+at threshold 0.36
+  precision: 0.0878
+  recall:    0.2546
+  flagged:   786 of 18,126 cells
+/opt/anaconda3/envs/pantanal/lib/python3.11/site-packages/joblib/externals/loky/process_executor.py:787: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+  warnings.warn(
+
+permutation importance on 2025
+tmax_1m            0.0514
+tmax_3m            0.0467
+pasture            0.0232
+dist_road          0.0226
+grassland          0.0221
+savanna            0.0147
+fire_prev          0.0145
+dist_water         0.0104
+rain_3m            0.0087
+other              0.0052
+rain_wet           0.0047
+forest             0.0031
+rain_1m            0.0021
+area_km2          -0.0002
+water_wet         -0.0009
+wetland           -0.0012
+water_3m          -0.0015
+month             -0.0018
+lc_water          -0.0034
+water_1m          -0.0039
+flooded_savanna   -0.0061
+
+saved predictions, results, importances and by year

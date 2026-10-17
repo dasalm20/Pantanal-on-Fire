@@ -40,13 +40,18 @@ grid = gpd.read_file(cfg.OUTPUTS["grid"], layer="grid")
 #       These show up in the same place every single month, so the model
 #       would learn that spot is always on fire. We drop them.
 #   3 = a hot spot over water. Not a fire. We drop these too.
-#
-# The satellite also rates how sure it is: low, nominal or high.
-# We keep all three for now. Dropping the low ones is a judgement call,
-# so instead of guessing we test it later in the sensitivity analysis.
 before = len(firms)
 firms = firms[firms["type"] == 0].copy()
 print(f"type filter: {before:,} -> {len(firms):,} detections")
+
+#---How sure the satellite was---
+# It rates each detection low, nominal or high. The baseline keeps all three.
+# Dropping the low ones is a judgement call, so it is tested rather than
+# guessed: CONFIDENCE=nominal drops them.
+if cfg.CONFIDENCE == "nominal":
+    before = len(firms)
+    firms = firms[firms["confidence"] != "l"].copy()
+    print(f"confidence filter: {before:,} -> {len(firms):,} detections")
 
 #---Keep only detections near the Pantanal---
 # The file covers all of Brazil. Building 9.8 million points and joining
@@ -131,16 +136,19 @@ print("prevalence:", panel["fire_binary"].mean())
 # terrain at the edge of the biome. Either way, edge cells are not comparable
 # to full cells. The cut-off itself is applied in 07_panel.py.
 chk = panel.merge(grid[["ID", "area_km2"]], on="ID")
-chk["area_bin"] = pd.cut(chk["area_km2"], [0, 1, 5, 12.5, 20, 25])
+# Bins as shares of a full cell, so they follow the cell size. At 5 km these
+# are the same [0, 1, 5, 12.5, 20, 25] as before.
+FULL = (cfg.GRID_M ** 2) / 1e6
+chk["area_bin"] = pd.cut(chk["area_km2"],
+                         [f * FULL for f in (0, 0.04, 0.2, 0.5, 0.8, 1.0)])
 chk["rate_per_km2"] = chk["fire_count"] / chk["area_km2"]
-
 print(chk.groupby("area_bin", observed=True)["fire_binary"].mean())
 print(chk.groupby("area_bin", observed=True)["rate_per_km2"].mean())
 
 #---Plot to have a visual reference--
 #this is a sanity check to see if the pattern is as expected. 
 # The plot shows that small cells record fewer fires, mostly because 
-# they cover less ground. The candidate cut-off of 12.5 km² is marked with a vertical line.
+# they cover less ground. The candidate cut-off is marked with a vertical line.
 chk["bin_mid"] = pd.cut(chk["area_km2"], 
 bins=25).apply(lambda b: b.mid)
 by_size = chk.groupby("bin_mid", 
@@ -155,9 +163,11 @@ ax.plot(by_size.index, by_size["fire_binary"], color="#15594d",
 ax.plot(by_size.index, by_size["rate_per_km2"], color="#9c4326",
         marker="o", markersize=3, linestyle="--", label="Detections per km²")
 
-# Candidate cut-off: half of a full cell.
-ax.axvline(12.5, color="#555", linewidth=1, linestyle=":")
-ax.text(12.5, ax.get_ylim()[1], " candidate cut-off\n 12.5 km²",
+# Candidate cut-off: half of a full cell. Taken from the config so it follows
+# the cell size.
+ax.axvline(cfg.MIN_AREA_KM2, color="#555", linewidth=1, linestyle=":")
+ax.text(cfg.MIN_AREA_KM2, ax.get_ylim()[1],
+        f" candidate cut-off\n {cfg.MIN_AREA_KM2:.1f} km²",
         ha="left", va="top", fontsize=8, color="#555")
 
 #Set the x and y labels, title, legend, and remove the top and right spines for a cleaner look.

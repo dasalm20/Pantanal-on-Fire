@@ -26,45 +26,45 @@ n    456949
 l     46196
 h     45726
 Name: count, dtype: int64
-rows: 553056 expected: 553056
-cell-months with fire: 26310
-prevalence: 0.04757203610484291
+rows: 146244 expected: 146244
+cell-months with fire: 15185
+prevalence: 0.1038333196575586
 area_bin
-(0.0, 1.0]      0.004190
-(1.0, 5.0]      0.017321
-(5.0, 12.5]     0.033520
-(12.5, 20.0]    0.041741
-(20.0, 25.0]    0.050315
+(0.0, 4.0]       0.010352
+(4.0, 20.0]      0.040941
+(20.0, 50.0]     0.076615
+(50.0, 80.0]     0.098058
+(80.0, 100.0]    0.113036
 Name: fire_binary, dtype: float64
 area_bin
-(0.0, 1.0]      0.018002
-(1.0, 5.0]      0.027329
-(5.0, 12.5]     0.036101
-(12.5, 20.0]    0.034391
-(20.0, 25.0]    0.043661
+(0.0, 4.0]       0.028414
+(4.0, 20.0]      0.028129
+(20.0, 50.0]     0.033978
+(50.0, 80.0]     0.032916
+(80.0, 100.0]    0.044253
 Name: rate_per_km2, dtype: float64
-/Users/nikos/Documents/Projects/Pantanal-on-Fire/02-Code/02_fire.py:173: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+/Users/nikos/Documents/Projects/Pantanal-on-Fire/02-Code/02_fire.py:183: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
   plt.show()
 month
-1     0.027968
-2     0.017987
-3     0.019723
-4     0.017488
-5     0.019701
-6     0.030268
-7     0.047583
-8     0.086270
-9     0.104409
-10    0.098789
-11    0.070300
-12    0.030377
+1     0.077131
+2     0.050874
+3     0.053992
+4     0.047346
+5     0.057438
+6     0.076065
+7     0.111758
+8     0.152047
+9     0.187003
+10    0.189546
+11    0.159760
+12    0.083039
 Name: fire_binary, dtype: float64
 year
-2019    0.078233
-2020    0.098509
-2021    0.046666
-2022    0.020719
-2023    0.029086
-2024    0.050438
-2025    0.009353
+2019    0.172793
+2020    0.198258
+2021    0.104107
+2022    0.060358
+2023    0.065958
+2024    0.098028
+2025    0.027331
 Name: fire_binary, dtype: float64

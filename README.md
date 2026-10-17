@@ -149,8 +149,9 @@ fire twelve times more often than the smallest. Dividing by area cuts that to 2.
 times, so most of it is simply the amount of ground a cell covers. The minimum cell
 size is therefore applied in `07_panel.py` rather than built into the grid, and
 varied in the sensitivity analysis. It turned out to matter less than expected:
-cross-validation moves only from 0.437 to 0.440 across cut-offs of 50, 75 and 100%
-of a full cell.
+cross-validation moves only from 0.4658 to 0.4704 across cut-offs of 50, 75 and
+100% of a full cell, and the full sweep from 0 to 100% in `a3_area_sweep.py`
+moves only from 0.4411 to 0.4542.
 
 **Four land cover classes are really a flood measure.** Wetland, water, grassland
 and flooded savanna swing by up to eight-fold between years and swing against one
@@ -166,10 +167,7 @@ is identical across all three, since the final model trains on all the training
 years either way.
 
 **MapBiomas Water encodes the month number in the pixel value**, not a yes or no
-It turned out to matter less than expected: cross-validation moves only from
-0.4658 to 0.4704 across cut-offs of 50, 75 and 100% of a full cell, and the
-full sweep from 0 to 100% in `a3_area_sweep.py` moves only from 0.4411 to
-0.4542.
+flag, which changes how the water share is calculated.
 
 **Tied scores had to be broken at random.** The burned-before baseline is an
 average over 18 cell-months, so it takes only 19 distinct values, and the

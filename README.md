@@ -39,6 +39,9 @@ examples:
   sensitivity test.
 - The first version of the access script used a search box too narrow to guarantee
   the nearest road had been found, which was caught by a check and fixed.
+- Two baselines score the same value on many cells at once, so where the top 10%
+  cut-off fell was being decided by the order of the table rather than by the
+  scores. Breaking those ties at random changed the headline comparison.
 
 So this repository does two things at once: it follows a process that was planned
 in advance, and it reviews that process closely enough to change it.
@@ -61,7 +64,7 @@ whether it burned last month, and a logistic regression on the same predictors.
 ## Progress
 
 All twelve pipeline stages are built and committed, plus three additional
-testing scripts and a master script that runs everything in order.
+testing scripts and a master script that runs the whole project in one go.
 
 | Script | Does | Result |
 |---|---|---|
@@ -83,9 +86,11 @@ testing scripts and a master script that runs everything in order.
 and `a2_folds_all.py` rebuild the panel and the folds with no minimum cell
 area, so `a3_area_sweep.py` can test cut-offs looser than the 50% baseline.
 
-`02-Code/000_master.py` runs all fifteen scripts in order, each as its own
-process so memory is released between stages, and writes a log per stage to
-`05-Output/logs/`. A full run takes about 72 minutes.
+`02-Code/000_master.py` runs the whole project in one pass: the baseline, then
+the two sensitivity tests that cannot be done on a slice of the finished panel
+and need the pipeline rebuilt from raw data. Each script runs as its own
+process, so memory is released between stages, and each run writes to its own
+folders so nothing is overwritten. All three runs take about 99 minutes.
 
 Each stage is written and committed on its own branch, and the decisions behind each
 one are recorded in `01-Doc/`.
@@ -99,7 +104,7 @@ five spatial folds agree closely (0.450 to 0.500).
 **On the held-out year the answer depends on how the ranking is measured.**
 2025 had a fire rate of 1.57%, the quietest year in the record. Across the
 whole ranking the Random Forest is ahead of the burned-before baseline:
-average precision 0.1100 against 0.0698, a gap of +0.0402 with a paired
+average precision 0.11 against 0.07, a gap of +0.0402 with a paired
 bootstrap range of +0.0097 to +0.0794, so the difference is real and not
 noise. On the top 10% of cells, the shortlist a fire manager would actually
 work from, the two cannot be separated: the forest catches 39.8% of 2025's
@@ -134,12 +139,56 @@ years when a lot of fire occurs. In a quiet year the few fires that happen are
 the places that always burn, which is what the historical baseline already
 knows, so the weather has little left to add at the top of the ranking.
 
-Fifteen sensitivity configurations were run, ten in `11_experiments.py` and
-five minimum cell areas in `a3_area_sweep.py`. The average precision gap is
-positive in all fifteen, from +0.0306 to +0.0441, so the ranking advantage
-does not rest on any one data choice. The top 10% gap stays near zero
-throughout, from -0.0695 to +0.0023, and is negative in fourteen of the
-fifteen.
+## Model evaluation and sensitivity
+
+The proposal listed five data preparation choices to vary. All five were run.
+
+| Choice | Baseline | Also tested | What happened |
+|---|---|---|---|
+| Smallest cell kept | Half a cell | 0, 25, 75, 100% | Gap stays positive throughout, +0.0306 to +0.0402 |
+| Cell size | 5 km | 10 km | Gap stays positive at +0.0348 but is no longer clear |
+| Weather window | 1 and 3 months | 1 month only | +0.0395, and the only variant to improve the shortlist |
+| Block size | 50 km | 25, 75 km | Changes the cross-validation score only, not the 2025 result |
+| Fire detections | All | Only the more certain | +0.0401, essentially unchanged |
+
+Three of these vary a slice of the finished panel and run in
+`11_experiments.py` and `a3_area_sweep.py`. The other two need the pipeline
+rebuilt from raw data, so each is a full separate run with its own folders.
+
+**Thirty-five configurations in total, and the average precision gap is
+positive in every one**, from +0.0082 to +0.0926. No data choice reverses the
+ranking result. The top 10% gap stays near zero throughout and is negative in
+most of them, so the shortlist tie is equally robust.
+
+**The two rebuild tests, against the baseline**
+
+| Run | Cells kept | Training fire rate | Cross-validation | 2025 gap | Clear? |
+|---|---|---|---|---|---|
+| Baseline, 5 km, all detections | 6,042 | 11.5% | 0.4658 | +0.0402 | yes |
+| 10 km grid | 1,512 | 21.3% | 0.5785 | +0.0348 | no |
+| Only the more certain detections | 6,042 | 11.2% | 0.4602 | +0.0401 | yes |
+
+**Dropping the uncertain fire detections changes almost nothing.** 46,196 of
+the 548,871 detections inside the biome are rated low confidence, 8.4% of
+them. Removing them moves the gap from +0.0402 to +0.0401. Since this is the
+outcome variable rather than a predictor, that is a useful check: the result
+does not rest on fires the satellite was unsure about.
+
+**The coarser grid is the test that bites.** At 10 km the biome becomes 1,741
+cells instead of 6,584, and the model keeps its lead at +0.0348 but the range
+widens to -0.0228 to +0.0847 and crosses zero. Three things drive it. The test
+year holds 4,536 rows instead of 18,126, so every interval widens. Lift over
+the base rate falls from 4.0 to 2.7 times, because coarser cells make the
+problem easier for the baseline as well. And previous-month fire becomes the
+strongest single predictor, roughly doubling in importance, since a 100 km²
+cell that burned last month is much more likely to contain fire again. The
+persistence signal the baseline already exploits gets stronger as cells get
+bigger, which is exactly what the modifiable areal unit problem predicts.
+
+Each run tunes its own hyperparameters, because tuning is part of the
+pipeline and should not be carried over from a different configuration. So
+the 10 km row is 10 km with its own tuning, not cell size varied in complete
+isolation.
 
 ## Things found along the way
 
@@ -178,18 +227,30 @@ be sorted. Averaging over 20 random tie-breaks removed that. It strengthened
 both baselines and narrowed the model's margin: the top 10% gap moved from
 -0.0140 to -0.0211.
 
+**A sensitivity run has to write somewhere else.** Running the pipeline at a
+different cell size would otherwise overwrite the grid, the panel, the model
+and every figure, destroying the baseline being tested against. The settings
+that change between runs are read once in `00_config.py`, and a run tag sends
+that run to its own folders, so all three sets of results exist side by side.
+
 ## Feedback from the proposal
 
-The proposal was reviewed in October. Three changes followed:
+The proposal was reviewed in October and scored 23.5 out of 25. The comments
+led to the following:
 
 - Hyperparameter tuning by grid search was added to `09_train.py`, nested inside the
   spatial cross-validation so that tuning never sees the held-out blocks.
 - Logistic regression was added as a third baseline, alongside historical fire frequency
   and previous-month fire.
-- The problem statement and objectives were tightened to name the modelling approach
-  and the specific comparisons being made.
+- The outcome is a binary yes or no per cell-month, so the model is a Random
+  Forest classifier. This is now stated rather than implied.
+- The modelling approach is named: a statistical susceptibility model, not a
+  fire-spread simulation or an agent-based model.
+- Two objectives that were too vague, "simple alternatives" and "different data
+  preparation choices", now name the three baselines and the five data choices
+  being varied.
 
-## workflow
+## Workflow
 
 ```text
 03-Data/  (raw, not tracked)
@@ -218,6 +279,8 @@ The proposal was reviewed in October. Three changes followed:
 - The lagged variables are all built in `07_panel.py`, not inside the model.
 - The smallest cell size kept is decided in `07_panel.py`, not in the grid itself, so it can be changed without rebuilding everything.
 - Every script prints how many rows it made and what years it covers, so a bad join shows up straight away.
+- Every number reported here comes from a logged run. The logs are kept in each
+  run's own `05-Output*/logs/` folder.
 
 ### What one row means
 
@@ -230,11 +293,14 @@ The months being predicted are August, September and October. The model learns f
 ## Repository
 
 ```text
-01-Doc/        proposal, project notebook, decisions
-02-Code/       the pipeline, one script per stage
-03-Data/       raw data (not tracked)
-04-Processed/  intermediate files (not tracked)
-05-Output/     figures and tables
+01-Doc/                    proposal, project notebook, decisions
+02-Code/                   the pipeline, one script per stage
+03-Data/                   raw data (not tracked)
+04-Processed/              intermediate files (not tracked)
+05-Output/                 figures, tables and logs
+
+05-Output_grid10km/        the 10 km sensitivity run
+05-Output_conf_nominal/    the restricted detections sensitivity run
 ```
 
 Raw and processed data are excluded from version control. `environment.yml` rebuilds the environment with `conda env create -f environment.yml`.
